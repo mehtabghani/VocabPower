@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.JSONHelper;
 import com.bathem.vocabpower.R;
@@ -44,10 +45,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("json", jsonData);
             List<Vocab> vocabs = JSONHelper.getCollectionFromJSON(jsonData);
 
-            for (Vocab v : vocabs) {
-                Log.d("json", v.word);
-                Log.d("json", v.meaning[0]);
-            }
+            if(vocabs != null)
+                DataModel.setVocabs(vocabs);
 
 
         } catch (IOException e) {

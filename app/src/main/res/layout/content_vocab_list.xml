@@ -12,4 +12,13 @@
     tools:context="com.bathem.vocabpower.Activity.VocabListActivity"
     tools:showIn="@layout/activity_vocab_list">
 
+    <ListView
+        android:id="@+id/vocab_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    </ListView>
+
+
+
 </RelativeLayout>
