@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadJSONFile();
         Button btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +35,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        init();
+
+    }
+
+    void init() {
+
+        loadJSONFile();
+
+        Vocab v = new Vocab();
+        v.setWord("Overhaul");
+
+        List list = new ArrayList<String>();
+        list.add("to repair or improved.");
+        v.setMeaning(list);
+
+        list = new ArrayList<String>();
+        list.add("i got my car overhauled.");
+        v.setExample(list);
+
+        DataModel.getVocabs().add(v);
+
     }
 
     void loadJSONFile () {

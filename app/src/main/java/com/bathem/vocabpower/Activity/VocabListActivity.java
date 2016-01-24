@@ -40,7 +40,7 @@ public class VocabListActivity extends AppCompatActivity {
 
         List<String> list = new ArrayList<String>();
         for (Vocab v: vocabs) {
-           list.add( v.word );
+           list.add( v.getWord() );
         }
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.activity_vocab_listview, list);
