@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.bathem.vocabpower.Entity.Category;
+import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.JSONHelper;
@@ -57,7 +60,27 @@ public class MainActivity extends AppCompatActivity {
 
         DataModel.getVocabs().add(v);
 
+
+        initDB();
     }
+
+    void initDB() {
+        DataBaseHelper db = new DataBaseHelper(getApplicationContext());
+
+        Boolean result = db.createGroup(new Category("Medical"));
+
+        CharSequence text;
+
+        if(result)
+             text = "Group added!";
+        else
+            text = "Failed to add group";
+
+        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+        toast.show();
+
+    }
+
 
     void loadJSONFile () {
 
