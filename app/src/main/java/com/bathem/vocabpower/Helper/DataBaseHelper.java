@@ -2,14 +2,25 @@ package com.bathem.vocabpower.Helper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import com.bathem.vocabpower.Entity.Category;
+import com.bathem.vocabpower.Entity.Vocab;
+import com.bathem.vocabpower.Entity.Word;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mehtab on 1/24/16.
  */
-public class DataBaseHelper extends SQLiteOpenHelper{
+public class DataBaseHelper extends SQLiteOpenHelper {
+
+    private static final int ERROR_IN_QUERY = -1;
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
@@ -18,7 +29,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "contactsManager";
+    private static final String DATABASE_NAME = "vocabsDB";
 
     // Table Names
     private static final String TABLE_WORD = "word";
@@ -42,7 +53,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static final String COL_TYPE = "type";
     private static final String COL_CATEGORY_NAME = "category_name";
     private static final String COL_FK_CATEGORY_ID = "category_id";
-
 
 
     // Table Create Statements
@@ -89,18 +99,15 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     private static final String CREATE_TABLE_WORD_CATEGORY = "CREATE TABLE "
             + TABLE_WORD_CATEGORY + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_FK_WORD_ID + " INTEGER NOT NULL,"
-            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + "),"
             + COL_FK_CATEGORY_ID + " INTEGER NOT NULL,"
+            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + "), "
             + "FOREIGN KEY (" + COL_FK_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COL_ID + ")"
             + ")";
 
-//    static DataBaseHelper instance;
-//
-//    public static DataBaseHelper getInstance() {
-//
-//        if(instance == null)
-//            instance = new DataBaseHelper()
-//    }
+    /* SELECT QUERY */
+
+    private static final String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
+
 
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -125,19 +132,89 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     /*
  * Creating a Group
  */
-    public boolean createGroup(Category category) {
+    public long createCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COL_CATEGORY_NAME, category.getCatgoryName());
 
         // insert row
-        long res = db.insert(TABLE_CATEGORY, null, values);
+        long id = db.insert(TABLE_CATEGORY, null, values);
 
-        if(res == -1)
-            return  false;
-
-        return true;
+        return id;
     }
 
+    public long addVocab(Vocab vocab) {
+
+        long id;
+        id = addWord(vocab.getWord());
+
+        if(id != ERROR_IN_QUERY) {
+
+            addMeaning(vocab.getMeaning(), id);
+            addExample(vocab.getExample(), id);
+        }
+
+        return id;
+    }
+
+    private long addWord(String word) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_WORD, word);
+        values.put(COL_CREATED_AT, String.valueOf(new Date()));
+
+        // insert row
+        long id = db.insert(TABLE_WORD, null, values);
+        return id;
+    }
+
+    private void addMeaning(List<String> meanings, long wordID) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (String meaning : meanings) {
+            ContentValues values = new ContentValues();
+            values.put(COL_MEANING, meaning);
+            values.put(COL_FK_WORD_ID, wordID);
+            db.insert(TABLE_MEANING, null, values);
+        }
+    }
+
+    private void addExample(List<String> examples, long wordID) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (String example : examples) {
+            ContentValues values = new ContentValues();
+            values.put(COL_EXAMPLE, example);
+            values.put(COL_FK_WORD_ID, wordID);
+            db.insert(TABLE_EXAMPLE, null, values);
+        }
+    }
+
+
+    public List<Word> getWordList() {
+        List<Word> words= new ArrayList<Word>();
+
+        String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
+        Log.e(LOG, SELECT_ALL_VOCAB);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(SELECT_ALL_VOCAB, null);
+
+        if (c.moveToFirst()) {
+          do {
+              Word word = new Word();
+              word.setId(c.getInt(c.getColumnIndex(COL_ID)));
+              word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
+              word.setCreateAt(Utils.getDateFromString(c.getString(c.getColumnIndex(COL_CREATED_AT))));
+              words.add(word);
+          } while (c.moveToNext());
+        }
+
+        return words;
+    }
 }

@@ -45,36 +45,37 @@ public class MainActivity extends AppCompatActivity {
 
     void init() {
 
-        loadJSONFile();
+        //loadJSONFile();
 
         Vocab v = new Vocab();
-        v.setWord("Overhaul");
+        v.setWord("Tempt");
 
         List list = new ArrayList<String>();
-        list.add("to repair or improved.");
+        list.add("to encourage someone to do or want something that is wrong.");
         v.setMeaning(list);
 
         list = new ArrayList<String>();
-        list.add("i got my car overhauled.");
+        list.add("Dont try to tempt me, i know this pie is delicious");
+
         v.setExample(list);
 
-        DataModel.getVocabs().add(v);
+        //DataModel.getVocabs().add(v);
 
 
-        initDB();
+        //addVocabInDB(v);
     }
 
-    void initDB() {
+    void addVocabInDB(Vocab vocab) {
         DataBaseHelper db = new DataBaseHelper(getApplicationContext());
 
-        Boolean result = db.createGroup(new Category("Medical"));
+        long result = db.addVocab(vocab);
 
         CharSequence text;
 
-        if(result)
-             text = "Group added!";
+        if(result == -1)
+            text = "Failed to add vocab.";
         else
-            text = "Failed to add group";
+            text = "Vocab added successfully.";
 
         Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
         toast.show();

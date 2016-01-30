@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.JSONHelper;
@@ -33,13 +35,15 @@ public class VocabListActivity extends AppCompatActivity {
 
     void prepareListView() {
 
-        List<Vocab> vocabs = DataModel.getVocabs();
+        DataBaseHelper db = new DataBaseHelper(getApplicationContext());
 
-        if(vocabs == null)
+        List<Word> words = db.getWordList();//DataModel.getVocabs();
+
+        if(words == null)
             return;
 
         List<String> list = new ArrayList<String>();
-        for (Vocab v: vocabs) {
+        for (Word v: words) {
            list.add( v.getWord() );
         }
 
