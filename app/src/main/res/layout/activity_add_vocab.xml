@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.bathem.vocabpower.Activity.AddVocabActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/title_word"
+        android:id="@+id/textView_word"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_word"
+        android:layout_below="@+id/textView_word"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/textView_word"
+        android:layout_alignStart="@+id/textView_word"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/title_meaning"
+        android:id="@+id/textView_meaning"
+        android:layout_marginTop="73dp"
+        android:layout_below="@+id/textView_word"
+        android:layout_alignLeft="@+id/textView_word"
+        android:layout_alignStart="@+id/textView_word" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_below="@+id/textView_meaning"
+        android:layout_alignLeft="@+id/textView_meaning"
+        android:layout_alignStart="@+id/textView_meaning" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/title_example"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/textView_word"
+        android:layout_alignStart="@+id/textView_word"
+        android:id="@+id/textView_example" />
+
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText2"
+        android:layout_below="@+id/textView_example"
+        android:layout_alignLeft="@+id/textView_example"
+        android:layout_alignStart="@+id/textView_example" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/button_add_vocab"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/editText2"
+        android:layout_alignEnd="@+id/editText2"
+        android:layout_marginBottom="30dp" />
+
+
+</RelativeLayout>

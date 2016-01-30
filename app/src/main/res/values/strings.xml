@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">VocabPower</string>
     <string name="title_activity_vocab_list">VocabListActivity</string>
+    <string name="title_word">Word</string>
+    <string name="title_meaning">Meaning</string>
+    <string name="title_example">Example</string>
+
+
 </resources>
