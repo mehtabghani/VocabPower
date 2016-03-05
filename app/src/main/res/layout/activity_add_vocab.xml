@@ -46,7 +46,7 @@
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/editText_meaning"
         android:layout_below="@+id/textView_meaning"
         android:layout_alignLeft="@+id/textView_meaning"
         android:layout_alignStart="@+id/textView_meaning" />
@@ -66,19 +66,19 @@
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/editText_example"
         android:layout_below="@+id/textView_example"
         android:layout_alignLeft="@+id/textView_example"
         android:layout_alignStart="@+id/textView_example" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Add"
         android:id="@+id/button_add_vocab"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/editText2"
-        android:layout_alignEnd="@+id/editText2"
+        android:layout_alignRight="@+id/editText_example"
+        android:layout_alignEnd="@+id/editText_example"
         android:layout_marginBottom="30dp" />
 
 

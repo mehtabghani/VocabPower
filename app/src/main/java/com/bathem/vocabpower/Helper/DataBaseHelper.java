@@ -195,7 +195,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
     public List<Word> getWordList() {
         List<Word> words= new ArrayList<Word>();
 
