@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.ExceptionHandler.ValidationException;
@@ -13,18 +15,28 @@ import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddVocabActivity extends AppCompatActivity {
 
     private String word;
     private String meaning;
     private String example;
+    private static int meaningButtonCount;
+    private static int exampleButtonCount;
+    private List<EditText> meaningEditTextList = new ArrayList<EditText>();
+    private List<EditText> exampleEditTextList = new ArrayList<EditText>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vocab);
         initAddVocabButton();
+        initAddMeaningFieldButton();
+        initAddExampleFieldButton();
+        meaningButtonCount = 0;
+        exampleButtonCount = 0;
     }
 
     void initAddVocabButton () {
@@ -35,6 +47,42 @@ public class AddVocabActivity extends AppCompatActivity {
                 addVocab();
             }
         });
+    }
+
+    void initAddMeaningFieldButton() {
+        Button btnAddField = (Button) findViewById(R.id.button_add_meaning_field);
+        btnAddField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMeaningFied((LinearLayout)findViewById(R.id.linearLayoutMeaning), meaningButtonCount, meaningEditTextList);
+                meaningButtonCount++;
+            }
+        });
+    }
+
+    void initAddExampleFieldButton() {
+        Button btnAddField = (Button) findViewById(R.id.button_add_example_field);
+        btnAddField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMeaningFied((LinearLayout)findViewById(R.id.linearLayoutExample), exampleButtonCount, exampleEditTextList);
+                exampleButtonCount++;
+            }
+        });
+    }
+
+    void addMeaningFied(LinearLayout layout, int id, List<EditText> editTextList) {
+        LinearLayout dynamicview = layout;
+
+        LinearLayout.LayoutParams lprams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        EditText editText = new EditText(this);
+        editText.setId(id);
+        editText.setLayoutParams(lprams);
+        dynamicview.addView(editText);
+        editTextList.add(editText);
     }
 
     void addVocab() {
