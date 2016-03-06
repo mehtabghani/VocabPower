@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.ExceptionHandler.ValidationException;
@@ -20,13 +19,13 @@ import java.util.List;
 public class AddVocabActivity extends AppCompatActivity {
 
     private String word;
-    private String meaning;
-    private String example;
+    private List<String> meanings;
+    private List<String> examples;
     private static int meaningButtonCount;
     private static int exampleButtonCount;
     private List<EditText> meaningEditTextList = new ArrayList<EditText>();
     private List<EditText> exampleEditTextList = new ArrayList<EditText>();
-
+    private static final int DYNAMIC_FIELD_LIMIT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +53,9 @@ public class AddVocabActivity extends AppCompatActivity {
         btnAddField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(meaningButtonCount == DYNAMIC_FIELD_LIMIT) return;
+
                 addMeaningFied((LinearLayout)findViewById(R.id.linearLayoutMeaning), meaningButtonCount, meaningEditTextList);
                 meaningButtonCount++;
             }
@@ -65,6 +67,9 @@ public class AddVocabActivity extends AppCompatActivity {
         btnAddField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(exampleButtonCount == DYNAMIC_FIELD_LIMIT) return;
+
                 addMeaningFied((LinearLayout)findViewById(R.id.linearLayoutExample), exampleButtonCount, exampleEditTextList);
                 exampleButtonCount++;
             }
@@ -89,8 +94,9 @@ public class AddVocabActivity extends AppCompatActivity {
 
         try {
             validateFields();
+            prepareVocabs();
             Vocab vocab = new Vocab();
-            vocab.setVocab(word, new String[]{meaning}, new String[]{example});
+            vocab.setVocab(word, meanings, examples);
             addVocabInDB(vocab);
         } catch (ValidationException e) {
             e.printStackTrace();
@@ -104,7 +110,6 @@ public class AddVocabActivity extends AppCompatActivity {
     void validateFields() throws ValidationException{
 
         EditText editText = (EditText) findViewById(R.id.editText_word);
-        word = editText.getText().toString();
 
         if(!validateField(editText)) {
             ValidationException e = new ValidationException("Please insert word");
@@ -112,21 +117,45 @@ public class AddVocabActivity extends AppCompatActivity {
         }
 
         editText = (EditText) findViewById(R.id.editText_meaning);
-        meaning = editText.getText().toString();
 
         if(!validateField(editText)) {
 
-            ValidationException e = new ValidationException("Please insert meaning");
+            ValidationException e = new ValidationException("Please insert meanings");
             throw e;
         }
 
         editText = (EditText) findViewById(R.id.editText_example);
-        example = editText.getText().toString();
 
 //        if(!validateField(editText)) {
 //            ValidationException e = new ValidationException("Empty field 3");
 //            throw e;
 //        }
+
+    }
+
+    void prepareVocabs() {
+        word = ((EditText) findViewById(R.id.editText_word)).getText().toString();
+
+        meanings = new ArrayList<String>();
+        examples = new ArrayList<String>();
+
+        String txt = ((EditText) findViewById(R.id.editText_meaning)).getText().toString();
+        meanings.add(txt);
+
+        //getting dynamic field data
+        for (EditText editText:meaningEditTextList) {
+            txt = editText.getText().toString();
+            meanings.add(txt);
+        }
+
+        txt = ((EditText) findViewById(R.id.editText_example)).getText().toString();
+        examples.add(txt);
+
+        //getting dynamic field data
+        for (EditText editText:exampleEditTextList) {
+            txt = editText.getText().toString();
+            examples.add(txt);
+        }
 
     }
 

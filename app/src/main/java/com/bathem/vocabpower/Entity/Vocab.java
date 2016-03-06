@@ -42,25 +42,27 @@ public class Vocab {
         this.example = example;
     }
 
-    public void setVocab(String _word, String[] _meanings, String[] _examples) {
+    public void setVocab(String _word, List<String> _meanings, List<String> _examples) {
 
         setWord(_word);
+        setMeaning(_meanings);
+        setExample(_examples);
 
-        if(_meanings.length > 0) {
-
-            meaning = new ArrayList<String>();
-            for (String _meaning : _meanings) {
-                meaning.add(_meaning);
-            }
-        }
-
-        if(_examples.length > 0) {
-
-            example = new ArrayList<String>();
-            for (String _example : _examples) {
-                example.add(_example);
-            }
-        }
+//        if(_meanings.size() > 0) {
+//
+//            meaning = new ArrayList<String>();
+//            for (String _meaning : _meanings) {
+//                meaning.add(_meaning);
+//            }
+//        }
+//
+//        if(_examples.size() > 0) {
+//
+//            example = new ArrayList<String>();
+//            for (String _example : _examples) {
+//                example.add(_example);
+//            }
+//        }
     }
 }
 
