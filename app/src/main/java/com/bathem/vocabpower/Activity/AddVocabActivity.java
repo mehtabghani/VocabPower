@@ -12,7 +12,6 @@ import com.bathem.vocabpower.ExceptionHandler.ValidationException;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
