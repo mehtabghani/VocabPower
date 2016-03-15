@@ -1,6 +1,8 @@
 package com.bathem.vocabpower.Model;
 
+
 import com.bathem.vocabpower.Entity.Vocab;
+import com.bathem.vocabpower.Entity.Word;
 
 import java.util.List;
 
@@ -10,6 +12,8 @@ import java.util.List;
 public class DataModel {
 
     private static List<Vocab> vocabs;
+    private static List<Word> words;
+
 
     public static List<Vocab> getVocabs() {
         return vocabs;
@@ -17,5 +21,13 @@ public class DataModel {
 
     public static void setVocabs(List<Vocab> vocabs) {
         DataModel.vocabs = vocabs;
+    }
+
+    public static List<Word> getWords() {
+        return words;
+    }
+
+    public static void setWords(List<Word> words) {
+        DataModel.words = words;
     }
 }

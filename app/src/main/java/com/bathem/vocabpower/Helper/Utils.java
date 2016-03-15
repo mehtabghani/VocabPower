@@ -9,9 +9,11 @@ import java.util.Date;
  */
 public class Utils {
 
+    private  static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
     public static Date getDateFromString(String date) {
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
         Date dateObj = null;
         try {
@@ -21,5 +23,19 @@ public class Utils {
         }
         return dateObj;
     }
+
+    public static String getStringDate(Date date) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(date);
+    }
+
+    public static Date getFormattedDate(Date date) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return getDateFromString(sdf.format(date));
+    }
+
+
 
 }

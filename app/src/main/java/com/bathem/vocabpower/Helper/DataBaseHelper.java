@@ -164,7 +164,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COL_WORD, word);
-        values.put(COL_CREATED_AT, String.valueOf(new Date()));
+        Date date= new Date();
+        String sDate = Utils.getStringDate(date);
+        values.put(COL_CREATED_AT, sDate);
 
         // insert row
         long id = db.insert(TABLE_WORD, null, values);
@@ -209,7 +211,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
               Word word = new Word();
               word.setId(c.getInt(c.getColumnIndex(COL_ID)));
               word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
-              word.setCreateAt(Utils.getDateFromString(c.getString(c.getColumnIndex(COL_CREATED_AT))));
+              String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
+              word.setCreateAt(Utils.getDateFromString(date));
               words.add(word);
           } while (c.moveToNext());
         }
