@@ -17,8 +17,7 @@
         </activity>
         <activity
             android:name=".Activity.VocabListActivity"
-            android:label="@string/title_activity_vocab_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_vocab_list" />
         <activity android:name=".Activity.AddVocabActivity" />
         <activity android:name=".Activity.DetailActivity"></activity>
     </application>
