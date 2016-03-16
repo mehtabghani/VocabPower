@@ -8,9 +8,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.bathem.vocabpower.Entity.Vocab;
+import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.ExceptionHandler.ValidationException;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
+import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,13 +99,18 @@ public class AddVocabActivity extends AppCompatActivity {
             Vocab vocab = new Vocab();
             vocab.setVocab(word, meanings, examples);
             addVocabInDB(vocab);
+            updateDataModel();
         } catch (ValidationException e) {
             e.printStackTrace();
             Toast toast = Toast.makeText(getApplicationContext(), e.getErrorMessage(), Toast.LENGTH_SHORT);
             toast.show();
-            return;
         }
+    }
 
+    private void updateDataModel () {
+        DataBaseHelper db = new DataBaseHelper(getApplicationContext());
+        List<Word> words = db.getWordList();
+        DataModel.setWords(words);
     }
 
     void validateFields() throws ValidationException{
