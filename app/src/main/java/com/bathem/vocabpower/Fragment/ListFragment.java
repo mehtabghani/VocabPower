@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.bathem.vocabpower.Activity.DetailActivity;
+import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Model.DataModel;
@@ -93,18 +95,14 @@ public class ListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Word word = DataModel.getWords().get(position);
-                Log.d("List", word.getWord());
+                Log.d("word", word.getWord());
 
-                if(word != null)
-                    showDetailActivity(word.getId());
+                if (word != null) {
+                   VocabListActivity actvity = (VocabListActivity) getHost();
+                    actvity.showDetailFragment();
+                }
             }
         });
     }
 
-    private void showDetailActivity(int vocabId) {
-
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra("vocab_id", vocabId);
-        startActivity(intent);
-    }
 }

@@ -24,101 +24,73 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/title_word"
-                android:id="@+id/textView_word"
+                android:id="@+id/textView_title_word"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/editText_word"
-                android:layout_below="@+id/textView_word"
+                android:id="@+id/textText_detail_word"
+                android:layout_below="@+id/textView_title_word"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="20dp"
                 android:text="test" />
 
-            `<RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/relativeLayoutMeaning"
-            android:layout_below="@+id/editText_word"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="false"
-            android:layout_marginTop="30dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/title_meaning"
-                android:id="@+id/textView_meaning"
+                android:id="@+id/textView_title_meaning"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/textText_detail_word"
+                android:layout_marginTop="20dp"
+                />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/linearLayoutMeaning"
-                android:orientation="vertical"
-                android:layout_below="@+id/button_add_meaning_field">
-                <TextView
-                    android:layout_width="fill_parent"
+            <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/editText_meaning"
+                    android:id="@+id/textView_detail_meaning"
                     android:text="test"
-                    android:layout_below="@+id/button_add_meaning_field"
+                    android:layout_below="@+id/textView_title_meaning"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/relativeLayoutExample"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="false"
-                android:layout_below="@+id/relativeLayoutMeaning"
-                android:layout_marginTop="30dp">
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="20dp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/title_example"
-                    android:id="@+id/textView_example"
+                    android:id="@+id/textView_title_example"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/textView_detail_meaning"
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/linearLayoutExample"
-                    android:orientation="vertical"
-                    android:layout_below="@+id/button_add_example_field">
+                    />
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText_example"
+                        android:id="@+id/textVie_detail_example"
                         android:text="test"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/button_add_example_field" />
-                </LinearLayout>
-
-            </RelativeLayout>
+                        android:layout_below="@+id/textView_title_example"
+                        android:layout_marginTop="20dp"
+                        />
 
         </LinearLayout>
 
