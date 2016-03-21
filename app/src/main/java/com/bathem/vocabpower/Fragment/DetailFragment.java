@@ -2,15 +2,11 @@ package com.bathem.vocabpower.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.TextKeyListener;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.TextView;
-
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
@@ -54,7 +50,9 @@ public class DetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateFields();
+        if(mVocab != null) {
+            updateFields();
+        }
     }
 
     private void getData() {
