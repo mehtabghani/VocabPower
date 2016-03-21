@@ -1,10 +1,8 @@
 package com.bathem.vocabpower.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.bathem.vocabpower.Activity.DetailActivity;
 import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
@@ -95,11 +92,11 @@ public class ListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Word word = DataModel.getWords().get(position);
-                Log.d("word", word.getWord());
+                Log.d("word", "Word ID:" + word.getId());
 
                 if (word != null) {
                    VocabListActivity actvity = (VocabListActivity) getHost();
-                    actvity.showDetailFragment();
+                    actvity.showDetailFragment(word.getId());
                 }
             }
         });

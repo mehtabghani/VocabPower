@@ -36,12 +36,15 @@ public class VocabListActivity extends AppCompatActivity {
         isDetailFragmentVisible = false;
     }
 
-    public void showDetailFragment() {
+    public void showDetailFragment(int id) {
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        DetailFragment detailFragment = DetailFragment.newInstance(id);
+
         // Replace the contents of the container with the new fragment
-        ft.replace(R.id.main_placeholder, new DetailFragment(), TAG_FRAMENT_DETAIL);
-        // or ft.add(R.id.your_placeholder, new FooFragment());
+        ft.replace(R.id.main_placeholder, detailFragment, TAG_FRAMENT_DETAIL);
+
         // Complete the changes added above
         ft.commit();
         isDetailFragmentVisible = true;

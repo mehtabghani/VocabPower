@@ -12,4 +12,8 @@ public class StringUtil {
 
         return  false;
     }
+
+    public static String capitalizeFirstLetter(String txt) {
+        return txt.substring(0,1).toUpperCase() + txt.substring(1).toLowerCase();
+    }
 }

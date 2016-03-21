@@ -219,4 +219,68 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return words;
     }
+
+    public Vocab getVocabByID(int id) {
+
+        Vocab vocab = new Vocab();
+        //getWord
+        vocab.setWord(getWordById(id));
+        //getMeaning
+        vocab.setMeaning(getMeaningsByid(id));
+        //getExample
+        vocab.setExample(getExamplesByid(id));
+
+        return vocab;
+    }
+
+    private String getWordById(int id) {
+
+        String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " WHERE "+ COL_ID + " = " + id;
+        Log.e(LOG, SELECT_WORD);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(SELECT_WORD, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        String word = c.getString(c.getColumnIndex(COL_WORD));
+        return word;
+    }
+
+    private List<String> getMeaningsByid(int wordId) {
+        List<String> meanings= new ArrayList<String>();
+
+        String SELECT_MEANINGS = "SELECT * FROM " + TABLE_MEANING + " WHERE " + COL_FK_WORD_ID + "=" + wordId;
+        Log.e(LOG, SELECT_MEANINGS);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(SELECT_MEANINGS, null);
+
+        if (c.moveToFirst()) {
+            do {
+                String meaning = c.getString(c.getColumnIndex(COL_MEANING));
+                meanings.add(meaning);
+            } while (c.moveToNext());
+        }
+        return meanings;
+    }
+
+    private List<String> getExamplesByid(int wordId) {
+        List<String> examples = new ArrayList<String>();
+
+        String SELECT_EXAMPLE = "SELECT * FROM " + TABLE_EXAMPLE + " WHERE " + COL_FK_WORD_ID + "=" + wordId;
+        Log.e(LOG, SELECT_EXAMPLE);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(SELECT_EXAMPLE, null);
+
+        if (c.moveToFirst()) {
+            do {
+                String example = c.getString(c.getColumnIndex(COL_EXAMPLE));
+                examples.add(example);
+            } while (c.moveToNext());
+        }
+        return examples;
+    }
 }
