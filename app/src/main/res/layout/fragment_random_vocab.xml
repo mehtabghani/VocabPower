@@ -9,6 +9,18 @@
         android:text="@string/title_word"
         android:id="@+id/textView_title_word" />
 
+
+    <Button
+        android:id="@+id/button_random_vocab"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/img_button_add"
+        />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +36,6 @@
         android:id= "@+id/textView_title_meaning"
         android:layout_below="@+id/textView_detail_word"
         android:layout_marginTop="10dp" />
-
 
     <TextView
         android:layout_width="match_parent"

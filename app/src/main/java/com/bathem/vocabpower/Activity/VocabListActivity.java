@@ -6,11 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Fragment.DetailFragment;
 import com.bathem.vocabpower.Fragment.ListFragment;
 import com.bathem.vocabpower.R;
 
-public class VocabListActivity extends AppCompatActivity {
+public class VocabListActivity extends BaseActivity {
 
     public static final String TAG_FRAMENT_LIST = "list_fragment";
     public static final String TAG_FRAMENT_DETAIL = "detail_fragment";

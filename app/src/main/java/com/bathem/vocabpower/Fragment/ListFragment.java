@@ -70,12 +70,11 @@ public class ListFragment extends Fragment {
 
     void prepareListView() {
 
-        List<Word> words = DataModel.getWords();
+        List<Word> words = DataModel.getCurrentWordList();
 
         if(words ==  null) {
-            DataBaseHelper db = new DataBaseHelper(getActivity().getApplicationContext());
-            words = db.getWordList();//DataModel.getVocabs();
-            DataModel.setWords(words);
+         Log.d("debug", "No words found");
+            return;
         }
 
         List<String> list = new ArrayList<String>();
@@ -91,7 +90,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Word word = DataModel.getWords().get(position);
+                Word word = DataModel.getCurrentWordList().get(position);
                 Log.d("word", "Word ID:" + word.getId());
 
                 if (word != null) {

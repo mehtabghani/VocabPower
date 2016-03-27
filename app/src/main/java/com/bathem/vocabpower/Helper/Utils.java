@@ -3,6 +3,7 @@ package com.bathem.vocabpower.Helper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by mehtab on 1/30/16.
@@ -36,6 +37,10 @@ public class Utils {
         return getDateFromString(sdf.format(date));
     }
 
+    public static int getRandomNumber(int min, int max) {
 
+        Random r = new Random();
+        return r.nextInt(max - min + 1) + min;
+    }
 
 }

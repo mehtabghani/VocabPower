@@ -1,6 +1,7 @@
 package com.bathem.vocabpower.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,11 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
+import com.bathem.vocabpower.Helper.Utils;
+import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 
 import java.util.List;
@@ -24,7 +29,6 @@ public class RandomVocabFragment extends Fragment {
     public RandomVocabFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,26 +43,41 @@ public class RandomVocabFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_random_vocab, container, false);
     }
 
-    private void init() {
-        mVocab = getRandomVocab();
-    }
 
     @Override
     public void onStart() {
         super.onStart();
 
+        initRandomVocabButton();
+
         if(mVocab != null) {
-            updateWordField(mVocab.getWord());
-            updateMeaningField(mVocab.getMeaning());
+           updateFields();
         }
     }
 
-    private Vocab getRandomVocab() {
+    private void init() {
+        getRandomVocab();
+    }
 
-        int id = 2;
+    private void updateFields() {
+        updateWordField(mVocab.getWord());
+        updateMeaningField(mVocab.getMeaning());
+    }
 
-        DataBaseHelper db = new DataBaseHelper(getContext());
-        return db.getVocabByID(id);
+    private void getRandomVocab() {
+        mVocab = DataModel.getCurrentRandomVocab();
+    }
+
+    private void initRandomVocabButton() {
+        Button btn = (Button) getActivity().findViewById(R.id.button_random_vocab);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mVocab = DataModel.getRandomVocab(getContext());
+                updateFields();
+            }
+        });
     }
 
     private void updateWordField (String word) {

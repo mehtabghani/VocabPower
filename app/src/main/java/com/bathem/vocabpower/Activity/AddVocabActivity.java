@@ -1,12 +1,13 @@
 package com.bathem.vocabpower.Activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.ExceptionHandler.ValidationException;
@@ -17,7 +18,7 @@ import com.bathem.vocabpower.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddVocabActivity extends AppCompatActivity {
+public class AddVocabActivity extends BaseActivity {
 
     private String word;
     private List<String> meanings;
@@ -110,7 +111,7 @@ public class AddVocabActivity extends AppCompatActivity {
     private void updateDataModel () {
         DataBaseHelper db = new DataBaseHelper(getApplicationContext());
         List<Word> words = db.getWordList();
-        DataModel.setWords(words);
+        DataModel.setCurrentWordList(words);
     }
 
     void validateFields() throws ValidationException{
