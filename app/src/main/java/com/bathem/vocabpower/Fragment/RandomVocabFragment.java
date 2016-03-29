@@ -1,8 +1,5 @@
 package com.bathem.vocabpower.Fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Entity.Vocab;
-import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
-import com.bathem.vocabpower.Helper.Utils;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 
@@ -51,7 +46,8 @@ public class RandomVocabFragment extends Fragment {
         initRandomVocabButton();
 
         if(mVocab != null) {
-           updateFields();
+            updateFields();
+            hideMeaningLayout();
         }
     }
 
@@ -66,6 +62,11 @@ public class RandomVocabFragment extends Fragment {
 
     private void getRandomVocab() {
         mVocab = DataModel.getCurrentRandomVocab();
+    }
+
+    private void hideMeaningLayout() {
+        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_meaning);
+        layout.setVisibility(View.GONE);
     }
 
     private void initRandomVocabButton() {

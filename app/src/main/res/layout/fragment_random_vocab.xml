@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorLightBlue"
+    android:paddingBottom="8dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:id="@+id/layout_random_word"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_word"
+            android:id="@+id/textView_detail_word"
+            android:textAlignment="center"
+            android:textSize="50dp"
+            android:textColor="#050000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:id="@+id/layout_random_meaning"
+        android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title_word"
-        android:id="@+id/textView_title_word" />
+        android:text="@string/title_meaning"
+        android:id="@+id/textView_detail_meaning" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_random_buttons"
+        android:orientation="horizontal"
+        android:layout_below="@id/layout_random_word"
+        android:gravity="center">
+
+    <Button
+        android:id="@+id/button_toogle_word_meaning"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/img_button_add" />
 
     <Button
         android:id="@+id/button_random_vocab"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/img_button_add"
-        />
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/img_button_add" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_word"
-        android:id="@+id/textView_detail_word"
-        android:layout_below="@+id/textView_title_word"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_meaning"
-        android:id= "@+id/textView_title_meaning"
-        android:layout_below="@+id/textView_detail_word"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_meaning"
-        android:id="@+id/textView_detail_meaning"
-        android:layout_below="@+id/textView_title_meaning"
-        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
