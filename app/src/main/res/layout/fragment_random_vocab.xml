@@ -5,7 +5,7 @@
     android:background="@color/colorLightBlue"
     android:paddingBottom="8dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingRight="10dp"
     android:paddingTop="@dimen/activity_vertical_margin">
 
 
@@ -54,13 +54,14 @@
         android:id="@+id/layout_random_buttons"
         android:orientation="horizontal"
         android:layout_below="@id/layout_random_container"
-        android:gravity="center">
+        android:gravity="right">
 
     <Button
         android:id="@+id/button_toogle_word_meaning"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         android:background="@drawable/img_button_add" />
 
     <Button

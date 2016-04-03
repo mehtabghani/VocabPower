@@ -182,13 +182,16 @@ public class AddVocabActivity extends BaseActivity {
 
         CharSequence text;
 
-        if(result == -1)
+        if(result == -1) {
             text = "Failed to add vocab.";
-        else
+        } else {
+            onBackPressed();
             text = "Vocab added successfully.";
-
-        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-        toast.show();
+            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            toast.show();
+        }
 
     }
+
+
 }

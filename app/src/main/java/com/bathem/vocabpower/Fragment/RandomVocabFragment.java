@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bathem.vocabpower.Entity.Vocab;
@@ -48,6 +49,7 @@ public class RandomVocabFragment extends Fragment {
 
         initRandomVocabButton();
         initWordMeaningToggleButton();
+        addClickListenerOnRandomContainer();
 
         if(mVocab != null) {
             updateFields();
@@ -91,6 +93,17 @@ public class RandomVocabFragment extends Fragment {
             }
         });
     }
+
+    private void addClickListenerOnRandomContainer() {
+        RelativeLayout layout = (RelativeLayout) getActivity().findViewById(R.id.layout_random_container);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleWordMeaningView();
+            }
+        });
+    }
+
 
     private void updateWordField (String word) {
         Log.d("VOCAB", "Word:" + word);
