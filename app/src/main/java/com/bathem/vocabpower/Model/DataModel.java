@@ -47,7 +47,7 @@ public class DataModel {
 
     public static Vocab getRandomVocab(Context context) {
 
-        if(sWords == null && sWords.size() < 0) {
+        if(sWords == null || sWords.size() <= 0) {
             Log.d("debug", "No word list available for random words prepartion.");
             return null;
         }
