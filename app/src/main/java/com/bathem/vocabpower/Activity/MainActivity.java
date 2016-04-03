@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Fragment.RandomVocabFragment;
@@ -24,6 +25,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addRandomVocabFragment();
     }
 
     void init() {
@@ -56,6 +63,12 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                if(DataModel.getWordList(MainActivity.this).size() == 0) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please add vocab first.", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+
                 Intent intent = new Intent(MainActivity.this, VocabListActivity.class);
                 startActivity(intent);
             }
@@ -67,7 +80,6 @@ public class MainActivity extends BaseActivity {
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(MainActivity.this, AddVocabActivity.class);
                 startActivity(intent);
             }

@@ -17,9 +17,12 @@ import com.bathem.vocabpower.R;
 
 import java.util.List;
 
+
 public class RandomVocabFragment extends Fragment {
 
     Vocab mVocab;
+    boolean wordLayoutVisible;
+
 
     public RandomVocabFragment() {
         // Required empty public constructor
@@ -44,6 +47,7 @@ public class RandomVocabFragment extends Fragment {
         super.onStart();
 
         initRandomVocabButton();
+        initWordMeaningToggleButton();
 
         if(mVocab != null) {
             updateFields();
@@ -64,19 +68,26 @@ public class RandomVocabFragment extends Fragment {
         mVocab = DataModel.getCurrentRandomVocab();
     }
 
-    private void hideMeaningLayout() {
-        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_meaning);
-        layout.setVisibility(View.GONE);
-    }
-
     private void initRandomVocabButton() {
         Button btn = (Button) getActivity().findViewById(R.id.button_random_vocab);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               mVocab = DataModel.getRandomVocab(getContext());
+                mVocab = DataModel.getRandomVocab(getContext());
                 updateFields();
+            }
+        });
+    }
+
+    private void initWordMeaningToggleButton() {
+
+        Button btn = (Button) getActivity().findViewById(R.id.button_toogle_word_meaning);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleWordMeaningView();
             }
         });
     }
@@ -106,5 +117,35 @@ public class RandomVocabFragment extends Fragment {
         tvMeaning.setText(stringBuilder.toString());
     }
 
+    private void toggleWordMeaningView() {
+        if(wordLayoutVisible) {
+            hideWordLayout();
+            showMeaningLayout();
+        } else {
+            showWordLayout();
+            hideMeaningLayout();
+        }
+    }
 
+    private void hideMeaningLayout() {
+        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_meaning);
+        layout.setVisibility(View.GONE);
+    }
+
+    private void hideWordLayout() {
+        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_word);
+        layout.setVisibility(View.GONE);
+        wordLayoutVisible = false;
+    }
+
+    private void showMeaningLayout() {
+        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_meaning);
+        layout.setVisibility(View.VISIBLE);
+    }
+
+    private void showWordLayout() {
+        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.layout_random_word);
+        layout.setVisibility(View.VISIBLE);
+        wordLayoutVisible = true;
+    }
 }

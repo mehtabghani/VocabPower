@@ -22,7 +22,6 @@ public class DataModel {
     private static Vocab sCurrentRandomVocab;
 
 
-
     public static List<Vocab> getsVocabs() {
         return sVocabs;
     }

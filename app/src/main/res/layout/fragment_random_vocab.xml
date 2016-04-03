@@ -8,9 +8,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:id="@+id/layout_random_container">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="135dp"
+        android:layout_height="130dp"
         android:id="@+id/layout_random_word"
         android:gravity="center"
         android:orientation="vertical">
@@ -28,38 +34,42 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="135dp"
+        android:layout_height="130dp"
         android:id="@+id/layout_random_meaning"
         android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textColor="#050000"
         android:text="@string/title_meaning"
         android:id="@+id/textView_detail_meaning" />
     </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layout_random_buttons"
         android:orientation="horizontal"
-        android:layout_below="@id/layout_random_word"
+        android:layout_below="@id/layout_random_container"
         android:gravity="center">
 
     <Button
         android:id="@+id/button_toogle_word_meaning"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/img_button_add" />
 
     <Button
         android:id="@+id/button_random_vocab"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/img_button_add" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/img_shuffle_icon" />
     </LinearLayout>
 
 
