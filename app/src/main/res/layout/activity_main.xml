@@ -3,39 +3,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainActivity"
-    android:background="@color/colorBG">
-
+    android:background="@color/colorBG"
+    tools:context=".Activity.MainActivity">
 
     <FrameLayout
         android:id="@+id/frameLayout_random_vocab"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:layout_margin="10dp">
-    </FrameLayout>
+        android:layout_margin="10dp"></FrameLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show List"
-        android:id="@+id/button_list"
-        android:layout_marginLeft="47dp"
-        android:layout_marginStart="47dp"
-        android:layout_alignTop="@+id/button_add_vocab"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@id/frameLayout_random_vocab"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_list"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorButtonMenu"
+            android:textColor="@color/colorButtonText"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Vocab List" />
+
+        <Button
+            android:id="@+id/button_practice"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorButtonMenu"
+            android:textColor="@color/colorButtonText"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Practice" />
+
+        <Button
+            android:id="@+id/button_flash_card"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorButtonMenu"
+            android:textColor="@color/colorButtonText"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Flash Card" />
+
+        <Button
+            android:id="@+id/button_settings"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorButtonMenu"
+            android:textColor="@color/colorButtonText"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Settings" />
+
+    </LinearLayout>
 
     <Button
+        android:id="@+id/button_add_vocab"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Vocab"
-        android:id="@+id/button_add_vocab"
-        android:layout_marginBottom="65dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="36dp"
-        android:layout_marginEnd="36dp" />
+        android:layout_alignParentRight="true"
+        android:text="Add Vocab" />
 
 </RelativeLayout>

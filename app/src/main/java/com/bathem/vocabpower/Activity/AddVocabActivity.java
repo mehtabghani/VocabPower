@@ -1,6 +1,9 @@
 package com.bathem.vocabpower.Activity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +18,7 @@ import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,22 +37,38 @@ public class AddVocabActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vocab);
-        initAddVocabButton();
         initAddMeaningFieldButton();
         initAddExampleFieldButton();
         meaningButtonCount = 0;
         exampleButtonCount = 0;
     }
 
-    void initAddVocabButton () {
-        Button btnAdd = (Button) findViewById(R.id.button_add_vocab);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addVocab();
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu ) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.add_vocab, menu );
+
+        return super.onCreateOptionsMenu( menu );
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+
+            case R.id.action_add:
+                addVocab();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 
     void initAddMeaningFieldButton() {
         Button btnAddField = (Button) findViewById(R.id.button_add_meaning_field);

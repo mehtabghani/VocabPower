@@ -4,6 +4,8 @@
     <string name="title_word">Word:</string>
     <string name="title_meaning">Meaning:</string>
     <string name="title_example">Example:</string>
+    <string name="action_button_done">Done</string>
+
 
 
 </resources>
