@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    private static final boolean DB_AVAIALBLE = true;
+
     private static final int ERROR_IN_QUERY = -1;
 
     // Logcat tag
@@ -128,8 +130,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-
-    /*
+/*
  * Creating a Group
  */
     public long createCategory(Category category) {
@@ -198,6 +199,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Word> getWordList() {
+
+        if(!DB_AVAIALBLE)
+            return new ArrayList<Word>();
+
+
         List<Word> words= new ArrayList<Word>();
 
         String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
@@ -221,6 +227,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public Vocab getVocabByID(int id) {
+
+        if(!DB_AVAIALBLE)
+            return  null;
 
         Vocab vocab = new Vocab();
         //getWord

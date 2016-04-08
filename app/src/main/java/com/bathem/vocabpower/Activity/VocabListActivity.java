@@ -1,10 +1,11 @@
 package com.bathem.vocabpower.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Fragment.DetailFragment;
@@ -23,6 +24,7 @@ public class VocabListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vocab_list);
         showListFragment();
+        initAddVocabButton();
     }
 
     void showListFragment() {
@@ -30,11 +32,12 @@ public class VocabListActivity extends BaseActivity {
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Replace the contents of the container with the new fragment
-        ft.replace(R.id.main_placeholder, new ListFragment(),TAG_FRAMENT_LIST);
+        ft.replace(R.id.main_placeholder, new ListFragment(), TAG_FRAMENT_LIST);
         // or ft.add(R.id.your_placeholder, new FooFragment());
         // Complete the changes added above
         ft.commit();
         isDetailFragmentVisible = false;
+        showAddVocabButton(View.VISIBLE);
     }
 
     public void showDetailFragment(int id) {
@@ -49,6 +52,25 @@ public class VocabListActivity extends BaseActivity {
         // Complete the changes added above
         ft.commit();
         isDetailFragmentVisible = true;
+        showAddVocabButton(View.INVISIBLE);
+    }
+
+    void initAddVocabButton() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_fab_list_add_vocab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(VocabListActivity.this, AddVocabActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    void showAddVocabButton (int v) {
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_fab_list_add_vocab);
+        fab.setVisibility(v);
     }
 
     @Override
@@ -64,8 +86,6 @@ public class VocabListActivity extends BaseActivity {
 
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
 }
