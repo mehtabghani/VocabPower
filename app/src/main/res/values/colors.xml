@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008000</color>
+    <color name="colorPrimary">#D72638</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#303F9F</color>
     <color name="colorLightBlue">#e6f3ff</color>
-    <color name="colorBG">#00284d</color>
+    <color name="colorBG">#12355B</color>
     <color name="colorListCell">#e6f3ff</color>
-    <color name="colorButtonMenu">#008000</color>
+    <color name="colorButtonMenu">#267208</color>
     <color name="colorButton">#008000</color>
     <color name="colorButtonText">#FFFFFFFF</color>
 

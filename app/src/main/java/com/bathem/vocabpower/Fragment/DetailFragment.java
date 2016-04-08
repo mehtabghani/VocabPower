@@ -98,6 +98,11 @@ public class DetailFragment extends Fragment {
         int index = 1;
 
         for (String str: examples) {
+            if(StringUtil.stringEmptyOrNull(str)) {
+                stringBuilder.append("-");
+                break;
+            }
+
             String txt = StringUtil.capitalizeFirstLetter(str);
             stringBuilder.append(index + ". " + txt);
             Log.d("VOCAB", "Example:" + index + ". " + txt);
