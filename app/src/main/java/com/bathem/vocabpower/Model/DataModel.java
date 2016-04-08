@@ -10,7 +10,6 @@ import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.Utils;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by mehtab on 1/17/16.
@@ -36,6 +35,11 @@ public class DataModel {
 
     public static void setCurrentWordList(List<Word> sWords) {
         DataModel.sWords = sWords;
+    }
+
+    public static void setWordInCurrentList(Word word) {
+
+        DataModel.sWords.add(word);
     }
 
     public static List<Word> getWordList(Context context) {

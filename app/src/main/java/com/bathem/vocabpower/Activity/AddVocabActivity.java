@@ -119,8 +119,8 @@ public class AddVocabActivity extends BaseActivity {
             prepareVocabs();
             Vocab vocab = new Vocab();
             vocab.setVocab(word, meanings, examples);
-            addVocabInDB(vocab);
-            updateDataModel();
+            long id = addVocabInDB(vocab);
+            updateDataModel(id);
         } catch (ValidationException e) {
             e.printStackTrace();
             Toast toast = Toast.makeText(getApplicationContext(), e.getErrorMessage(), Toast.LENGTH_SHORT);
@@ -128,10 +128,12 @@ public class AddVocabActivity extends BaseActivity {
         }
     }
 
-    private void updateDataModel () {
+    private void updateDataModel (long id) {
+        if(id == -1)
+            return;
         DataBaseHelper db = new DataBaseHelper(getApplicationContext());
-        List<Word> words = db.getWordList();
-        DataModel.setCurrentWordList(words);
+        Word words = db.getWordById((int)id);
+        DataModel.setWordInCurrentList(words);
     }
 
     void validateFields() throws ValidationException{
@@ -195,7 +197,7 @@ public class AddVocabActivity extends BaseActivity {
         return true;
     }
 
-    void addVocabInDB(Vocab vocab) {
+    long addVocabInDB(Vocab vocab) {
         DataBaseHelper db = new DataBaseHelper(getApplicationContext());
 
         long result = db.addVocab(vocab);
@@ -210,7 +212,7 @@ public class AddVocabActivity extends BaseActivity {
             Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
             toast.show();
         }
-
+        return result;
     }
 
 

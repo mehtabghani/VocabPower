@@ -8,22 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.bathem.vocabpower.Activity.VocabListActivity;
+import com.bathem.vocabpower.Adapter.VocabListAdapter;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mehtab on 16/03/16.
  */
 public class ListFragment extends Fragment {
 
+    VocabListAdapter adapter;
+    ArrayList<Word> words;
 
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
@@ -69,25 +70,20 @@ public class ListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        prepareListView();
+        words = (ArrayList<Word>) DataModel.getCurrentWordList();
+        adapter.notifyDataSetChanged();
     }
 
     void prepareListView() {
 
-        List<Word> words = DataModel.getCurrentWordList();
+        words = (ArrayList<Word>) DataModel.getCurrentWordList();
 
         if(words ==  null) {
          Log.d("debug", "No words found");
             return;
         }
 
-        List<String> list = new ArrayList<String>();
-
-        for (Word v: words) {
-            list.add( v.getWord() );
-        }
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.activity_vocab_listview, list);
+         adapter = new VocabListAdapter(getActivity(), words);
         ListView listView = (ListView)getView().findViewById(R.id.vocab_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

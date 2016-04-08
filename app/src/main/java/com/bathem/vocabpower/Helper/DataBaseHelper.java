@@ -233,7 +233,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         Vocab vocab = new Vocab();
         //getWord
-        vocab.setWord(getWordById(id));
+        vocab.setWord(getColunmWordById(id));
         //getMeaning
         vocab.setMeaning(getMeaningsByid(id));
         //getExample
@@ -242,7 +242,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return vocab;
     }
 
-    private String getWordById(int id) {
+    private String getColunmWordById(int id) {
 
         String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " WHERE "+ COL_ID + " = " + id;
         Log.e(LOG, SELECT_WORD);
@@ -291,5 +291,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         return examples;
+    }
+
+
+    public Word getWordById(int id) {
+
+        String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " WHERE "+ COL_ID + " = " + id;
+        Log.e(LOG, SELECT_WORD);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(SELECT_WORD, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Word word = new Word();
+        word.setId(c.getInt(c.getColumnIndex(COL_ID)));
+        word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
+        String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
+        word.setCreateAt(Utils.getDateFromString(date));
+        return word;
     }
 }
