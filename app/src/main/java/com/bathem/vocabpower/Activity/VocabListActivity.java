@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.bathem.vocabpower.Activity.Base.BaseActivity;
@@ -26,6 +29,33 @@ public class VocabListActivity extends BaseActivity {
         showListFragment();
         initAddVocabButton();
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu ) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.delete_vocab, menu );
+
+        return super.onCreateOptionsMenu( menu );
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+
+            case R.id.action_delete:
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 
     void showListFragment() {
 

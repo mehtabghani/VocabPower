@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bathem.vocabpower.Entity.Word;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
  * Created by mehtab on 08/04/16.
  */
 public class VocabListAdapter extends ArrayAdapter<Word> {
+
+    boolean shouldShowChekBox;
 
     public VocabListAdapter(Context context, ArrayList<Word> words) {
         super(context, 0, words);
@@ -34,6 +37,19 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         TextView tv = (TextView) convertView.findViewById(R.id.vocab_cell_label);
         tv.setText(word.getWord());
 
+        CheckBox cb = (CheckBox) convertView.findViewById(R.id.vocab_cell_checkBox);
+
+        if(shouldShowChekBox) {
+            cb.setVisibility(View.VISIBLE);
+
+        } else {
+            cb.setVisibility(View.INVISIBLE);
+        }
+
         return convertView;
+    }
+
+   public void setVisibilityOfCheckBox(Boolean shouldShow) {
+        this.shouldShowChekBox = shouldShow;
     }
 }

@@ -83,7 +83,8 @@ public class ListFragment extends Fragment {
             return;
         }
 
-         adapter = new VocabListAdapter(getActivity(), words);
+        adapter = new VocabListAdapter(getActivity(), words);
+        adapter.setVisibilityOfCheckBox(false);
         ListView listView = (ListView)getView().findViewById(R.id.vocab_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
