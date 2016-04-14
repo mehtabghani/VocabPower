@@ -42,6 +42,7 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     // The onCreateView method is called when Fragment should create its View object hierarchy,
@@ -95,11 +96,41 @@ public class ListFragment extends Fragment {
                 Log.d("word", "Word ID:" + word.getId());
 
                 if (word != null) {
-                   VocabListActivity actvity = (VocabListActivity) getHost();
+                    VocabListActivity actvity = (VocabListActivity) getHost();
                     actvity.showDetailFragment(word.getId());
                 }
             }
         });
+    }
+
+
+    public void onDeleteActionButtonPressed() {
+
+        if(adapter.getVisibilityOfCheckBox() == false) {
+            adapter.setVisibilityOfCheckBox(true);
+            adapter.notifyDataSetChanged();
+        } else {
+            //delete
+            adapter.setVisibilityOfCheckBox(false);
+            adapter.notifyDataSetChanged();
+            deleteItems();
+        }
+    }
+
+    void deleteItems () {
+        Log.d("debug", "deleteItems");
+
+        ArrayList<Integer> ids = adapter.getListOfItemsToBeDelete();
+
+        if(ids != null && ids.size() > 0) {
+            for (Integer id:ids) {
+                Log.d("debug", "delete id:" + id);
+            }
+            adapter.notifyDataSetChanged();
+        } else {
+            Log.d("debug", "None of the item selected.");
+        }
+        adapter.clearDeleteItemList();
     }
 
 }

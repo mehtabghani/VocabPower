@@ -1,6 +1,8 @@
 package com.bathem.vocabpower.Adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +21,21 @@ import java.util.ArrayList;
 public class VocabListAdapter extends ArrayAdapter<Word> {
 
     boolean shouldShowChekBox;
+    ArrayList<Integer> listOfItemsToBeDelete;
+    Handler listHandler;
+
 
     public VocabListAdapter(Context context, ArrayList<Word> words) {
         super(context, 0, words);
+        this.listOfItemsToBeDelete = new ArrayList<Integer>();
+        setVisibilityOfCheckBox(false);
+        this.listHandler = listHandler;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Word word = getItem(position);
+        final Word word = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -37,10 +45,25 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         TextView tv = (TextView) convertView.findViewById(R.id.vocab_cell_label);
         tv.setText(word.getWord());
 
-        CheckBox cb = (CheckBox) convertView.findViewById(R.id.vocab_cell_checkBox);
+       final CheckBox cb = (CheckBox) convertView.findViewById(R.id.vocab_cell_checkBox);
+
+        cb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("debug", "Checkbox:"+ cb.isChecked());
+
+                if(cb.isChecked()) {
+                    listOfItemsToBeDelete.add(Integer.valueOf( word.getId() ));
+                } else {
+                    listOfItemsToBeDelete.remove(Integer.valueOf( word.getId() ));
+                }
+            }
+        });
 
         if(shouldShowChekBox) {
             cb.setVisibility(View.VISIBLE);
+            cb.setChecked(false);
 
         } else {
             cb.setVisibility(View.INVISIBLE);
@@ -49,7 +72,21 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         return convertView;
     }
 
-   public void setVisibilityOfCheckBox(Boolean shouldShow) {
+    public void setVisibilityOfCheckBox(Boolean shouldShow) {
         this.shouldShowChekBox = shouldShow;
     }
+
+    public boolean getVisibilityOfCheckBox() {
+        return this.shouldShowChekBox;
+    }
+
+    public ArrayList<Integer> getListOfItemsToBeDelete () {
+        return listOfItemsToBeDelete;
+    }
+
+    public void clearDeleteItemList() {
+        listOfItemsToBeDelete.clear();
+    }
+
+
 }

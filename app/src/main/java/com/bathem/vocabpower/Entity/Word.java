@@ -43,4 +43,14 @@ public class Word {
     public void setTypeID(int typeID) {
         this.typeID = typeID;
     }
+
+    @Override
+    public boolean equals(Object o) {
+       Integer i =  (Integer)o;
+
+        if(Integer.valueOf(this.id) == i)
+            return true;
+
+        return super.equals(o);
+    }
 }

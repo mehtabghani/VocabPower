@@ -20,6 +20,8 @@ public class VocabListActivity extends BaseActivity {
     public static final String TAG_FRAMENT_LIST = "list_fragment";
     public static final String TAG_FRAMENT_DETAIL = "detail_fragment";
     boolean isDetailFragmentVisible;
+    ListFragment listFragment;
+
 
 
     @Override
@@ -35,7 +37,7 @@ public class VocabListActivity extends BaseActivity {
     public boolean onCreateOptionsMenu( Menu menu ) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.delete_vocab, menu );
+        inflater.inflate(R.menu.delete_vocab, menu);
 
         return super.onCreateOptionsMenu( menu );
     }
@@ -46,6 +48,7 @@ public class VocabListActivity extends BaseActivity {
 
 
             case R.id.action_delete:
+                onDeleteActionButtonPressed();
                 return true;
 
             default:
@@ -61,8 +64,9 @@ public class VocabListActivity extends BaseActivity {
 
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+         listFragment = new ListFragment();
         // Replace the contents of the container with the new fragment
-        ft.replace(R.id.main_placeholder, new ListFragment(), TAG_FRAMENT_LIST);
+        ft.replace(R.id.main_placeholder, listFragment, TAG_FRAMENT_LIST);
         // or ft.add(R.id.your_placeholder, new FooFragment());
         // Complete the changes added above
         ft.commit();
@@ -117,5 +121,8 @@ public class VocabListActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    void onDeleteActionButtonPressed() {
+        listFragment.onDeleteActionButtonPressed();
+    }
 
 }
