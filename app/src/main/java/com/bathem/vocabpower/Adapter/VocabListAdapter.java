@@ -2,7 +2,6 @@ package com.bathem.vocabpower.Adapter;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +49,6 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.d("debug", "Checkbox:"+ cb.isChecked());
 
                 if(cb.isChecked()) {
                     listOfItemsToBeDelete.add(Integer.valueOf( word.getId() ));
