@@ -24,7 +24,6 @@ public class VocabListActivity extends BaseActivity {
     DetailFragment detailFragment;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

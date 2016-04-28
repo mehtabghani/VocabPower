@@ -1,5 +1,6 @@
 package com.bathem.vocabpower.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bathem.vocabpower.Activity.AddVocabActivity;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
@@ -125,6 +127,7 @@ public class DetailFragment extends Fragment {
 
     public void onEditActionButtonPressed() {
         Log.d("debug", "onEditActionButtonPressed");
-    }
+        Intent intent = new Intent(getActivity(), AddVocabActivity.class);
+        startActivity(intent);    }
 
 }
