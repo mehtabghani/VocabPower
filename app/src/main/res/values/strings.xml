@@ -5,6 +5,8 @@
     <string name="title_meaning">Meaning:</string>
     <string name="title_example">Example:</string>
     <string name="action_button_done">Done</string>
+    <string name="action_button_delete">Delete</string>
+    <string name="action_button_edit">Edit</string>
 
 
 

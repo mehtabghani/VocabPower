@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
@@ -42,7 +44,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get back arguments
+        setHasOptionsMenu(true);
         mID = getArguments().getInt(VOCAB_ID, 0);
         getData();
     }
@@ -112,6 +114,17 @@ public class DetailFragment extends Fragment {
 
         TextView tvMeaning = (TextView) getActivity().findViewById(R.id.textView_detail_example);
         tvMeaning.setText(stringBuilder.toString());
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_delete).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+
+    public void onEditActionButtonPressed() {
+        Log.d("debug", "onEditActionButtonPressed");
     }
 
 }

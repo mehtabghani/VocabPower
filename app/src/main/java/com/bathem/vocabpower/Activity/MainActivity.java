@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity {
         addRandomVocabFragment();
         initListButton();
         initAddButton();
+        initSettingsButton();
     }
 
     void addRandomVocabFragment() {
@@ -59,7 +60,7 @@ public class MainActivity extends BaseActivity {
 
     void setPaddingOfRandomFrameLayout (int bottomPadding) {
         FrameLayout layout = (FrameLayout) findViewById(R.id.frameLayout_random_vocab);
-        layout.setPadding(10, 10 ,10, bottomPadding);
+        layout.setPadding(10, 10, 10, bottomPadding);
     }
 
     private Vocab getRandomVocab() {
@@ -91,6 +92,17 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddVocabActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initSettingsButton() {
+        Button btnSetting = (Button) findViewById(R.id.button_settings);
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });

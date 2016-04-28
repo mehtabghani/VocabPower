@@ -21,6 +21,7 @@ public class VocabListActivity extends BaseActivity {
     public static final String TAG_FRAMENT_DETAIL = "detail_fragment";
     boolean isDetailFragmentVisible;
     ListFragment listFragment;
+    DetailFragment detailFragment;
 
 
 
@@ -32,12 +33,11 @@ public class VocabListActivity extends BaseActivity {
         initAddVocabButton();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu( Menu menu ) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.delete_vocab, menu);
+        inflater.inflate(R.menu.edit_delete_vocab, menu);
 
         return super.onCreateOptionsMenu( menu );
     }
@@ -46,9 +46,12 @@ public class VocabListActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-
             case R.id.action_delete:
                 onDeleteActionButtonPressed();
+                return true;
+
+            case R.id.action_edit:
+                onEditActionButtonPressed();
                 return true;
 
             default:
@@ -78,7 +81,7 @@ public class VocabListActivity extends BaseActivity {
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        DetailFragment detailFragment = DetailFragment.newInstance(id);
+        detailFragment = DetailFragment.newInstance(id);
 
         // Replace the contents of the container with the new fragment
         ft.replace(R.id.main_placeholder, detailFragment, TAG_FRAMENT_DETAIL);
@@ -122,7 +125,15 @@ public class VocabListActivity extends BaseActivity {
     }
 
     void onDeleteActionButtonPressed() {
-        listFragment.onDeleteActionButtonPressed();
+        if(listFragment != null) {
+            listFragment.onDeleteActionButtonPressed();
+        }
+    }
+
+    void onEditActionButtonPressed() {
+         if(detailFragment != null) {
+            detailFragment.onEditActionButtonPressed();
+         }
     }
 
 }

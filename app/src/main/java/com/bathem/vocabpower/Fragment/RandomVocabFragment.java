@@ -35,6 +35,7 @@ public class RandomVocabFragment extends Fragment {
         init();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

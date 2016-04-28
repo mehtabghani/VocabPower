@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +42,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+         setHasOptionsMenu(true);
 
     }
 
@@ -131,6 +132,12 @@ public class ListFragment extends Fragment {
             Log.d("debug", "None of the item selected.");
         }
         adapter.clearDeleteItemList();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_edit).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
 }
