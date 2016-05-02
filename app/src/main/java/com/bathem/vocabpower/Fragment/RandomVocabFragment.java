@@ -63,7 +63,7 @@ public class RandomVocabFragment extends Fragment {
     }
 
     private void updateFields() {
-        updateWordField(mVocab.getWord());
+        updateWordField(mVocab.getWord().getWord());
         updateMeaningField(mVocab.getMeaning());
     }
 

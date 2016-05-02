@@ -1,8 +1,5 @@
 package com.bathem.vocabpower.Entity;
 
-import com.bathem.vocabpower.Helper.StringUtil;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,18 +8,24 @@ import java.util.List;
  */
 public class Vocab {
 
-     private String word;
+     //private String word;
+     private Word word;
      private List<String> meaning;
      private List<String> example;
 
 
-    public String getWord() {
-        return word;
-    }
+//    public String getWord() {
+//
+//        return word;
+//    }
+//
+//    public void setWord(String word) {
+//
+//        this.word = word;
+//    }
 
-    public void setWord(String word) {
-        this.word = word;
-    }
+
+
 
     public List<String> getMeaning() {
         return meaning;
@@ -42,7 +45,7 @@ public class Vocab {
         this.example = example;
     }
 
-    public void setVocab(String _word, List<String> _meanings, List<String> _examples) {
+    public void setVocab(Word _word, List<String> _meanings, List<String> _examples) {
 
         setWord(_word);
         setMeaning(_meanings);
@@ -63,6 +66,14 @@ public class Vocab {
 //                example.add(_example);
 //            }
 //        }
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
     }
 }
 

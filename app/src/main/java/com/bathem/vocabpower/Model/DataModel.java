@@ -19,6 +19,7 @@ public class DataModel {
     private static List<Vocab> sVocabs;
     private static List<Word> sWords;
     private static Vocab sCurrentRandomVocab;
+    private static Vocab sCurrentVocab;
 
 
     public static List<Vocab> getsVocabs() {
@@ -64,5 +65,13 @@ public class DataModel {
 
     public static Vocab getCurrentRandomVocab() {
         return sCurrentRandomVocab;
+    }
+
+    public static Vocab getCurrentVocab() {
+        return sCurrentVocab;
+    }
+
+    public static void setCurrentVocab(Vocab sCurrentVocab) {
+        DataModel.sCurrentVocab = sCurrentVocab;
     }
 }

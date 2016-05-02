@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import com.bathem.vocabpower.Activity.AddVocabActivity;
 import com.bathem.vocabpower.Entity.Vocab;
+import com.bathem.vocabpower.Enum.AddEditMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
+import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 
 import java.util.List;
@@ -63,10 +65,11 @@ public class DetailFragment extends Fragment {
         //getvocab from db
         DataBaseHelper db = new DataBaseHelper(getContext());
         mVocab = db.getVocabByID(mID);
+        DataModel.setCurrentVocab(mVocab);
     }
 
     private void updateFields() {
-        updateWordField(mVocab.getWord());
+        updateWordField(mVocab.getWord().getWord());
         updateMeaningField(mVocab.getMeaning());
         updateExampleField(mVocab.getExample());
     }
@@ -128,6 +131,6 @@ public class DetailFragment extends Fragment {
     public void onEditActionButtonPressed() {
         Log.d("debug", "onEditActionButtonPressed");
         Intent intent = new Intent(getActivity(), AddVocabActivity.class);
+        intent.putExtra(AddVocabActivity.ADD_EDIT_MODE, AddEditMode.edit_mode.ordinal());
         startActivity(intent);    }
-
 }

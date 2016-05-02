@@ -108,7 +108,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
     void loadJSONFile () {
 
         try {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.Enum.AddEditMode;
 import com.bathem.vocabpower.ExceptionHandler.ValidationException;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
@@ -27,11 +28,6 @@ import java.util.List;
  */
 
 
-enum Mode {
-    add_mode,
-    edit_mode
-}
-
 public class AddEditFragment extends Fragment {
 
     private String word;
@@ -42,7 +38,8 @@ public class AddEditFragment extends Fragment {
     private List<EditText> meaningEditTextList = new ArrayList<EditText>();
     private List<EditText> exampleEditTextList = new ArrayList<EditText>();
     private static final int DYNAMIC_FIELD_LIMIT = 2;
-    private Mode mode;
+    private AddEditMode mode;
+    private Vocab mCurrentVocab;
 
     public AddEditFragment() {
         // Required empty public constructor
@@ -67,13 +64,16 @@ public class AddEditFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(mode == Mode.add_mode) {
+        if(mode == AddEditMode.add_mode) {
             initAddMeaningFieldButton();
             initAddExampleFieldButton();
+        } else {
+            hideAddButtons();
+            prepareFieldsForEditMode();
         }
     }
 
-    public void setMode(Mode _mode) {
+    public void setMode(AddEditMode _mode) {
         this.mode = _mode;
     }
 
@@ -97,9 +97,9 @@ public class AddEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(exampleButtonCount == DYNAMIC_FIELD_LIMIT) return;
+                if (exampleButtonCount == DYNAMIC_FIELD_LIMIT) return;
 
-                addMeaningFied((LinearLayout)getActivity().findViewById(R.id.linearLayoutExample), exampleButtonCount, exampleEditTextList);
+                addMeaningFied((LinearLayout) getActivity().findViewById(R.id.linearLayoutExample), exampleButtonCount, exampleEditTextList);
                 exampleButtonCount++;
             }
         });
@@ -125,7 +125,9 @@ public class AddEditFragment extends Fragment {
             validateFields();
             prepareVocabs();
             Vocab vocab = new Vocab();
-            vocab.setVocab(word, meanings, examples);
+            Word _word = new Word();
+            _word.setWord(word);
+            vocab.setVocab(_word, meanings, examples);
             long id = addVocabInDB(vocab);
             updateDataModel(id);
         } catch (ValidationException e) {
@@ -160,7 +162,7 @@ public class AddEditFragment extends Fragment {
             throw e;
         }
 
-        editText = (EditText) getActivity().findViewById(R.id.editText_example);
+       // editText = (EditText) getActivity().findViewById(R.id.editText_example);
 
 //        if(!validateField(editText)) {
 //            ValidationException e = new ValidationException("Empty field 3");
@@ -222,5 +224,32 @@ public class AddEditFragment extends Fragment {
         return result;
     }
 
+
+    void hideAddButtons() {
+        Button btnAddField = (Button) getActivity().findViewById(R.id.button_add_meaning_field);
+        btnAddField.setVisibility(View.INVISIBLE);
+        btnAddField = (Button) getActivity().findViewById(R.id.button_add_example_field);
+        btnAddField.setVisibility(View.INVISIBLE);
+
+    }
+
+    void prepareFieldsForEditMode () {
+        mCurrentVocab = DataModel.getCurrentVocab();
+
+        EditText editText = (EditText) getActivity().findViewById(R.id.editText_word);
+        editText.setText(mCurrentVocab.getWord().getWord());
+
+        editText = (EditText) getActivity().findViewById(R.id.editText_meaning);
+        editText.setText(mCurrentVocab.getMeaning().get(0));
+
+        if(mCurrentVocab.getExample().size() > 0) {
+            editText = (EditText) getActivity().findViewById(R.id.editText_example);
+            editText.setText(mCurrentVocab.getExample().get(0));
+        }
+    }
+
+    public void editVocab() {
+
+    }
 
 }

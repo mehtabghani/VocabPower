@@ -148,7 +148,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public long addVocab(Vocab vocab) {
 
         long id;
-        id = addWord(vocab.getWord());
+        id = addWord(vocab.getWord().getWord());
 
         if(id != ERROR_IN_QUERY) {
 
@@ -198,6 +198,57 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    public long editVocab(Vocab vocab) {
+
+        long id;
+        id = editWordbyId(vocab.getWord().getWord(), vocab.getWord().getId());
+
+        if(id != ERROR_IN_QUERY) {
+
+            addMeaning(vocab.getMeaning(), id);
+            addExample(vocab.getExample(), id);
+        }
+
+        return id;
+    }
+
+    private long editWordbyId(String word, int _id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_WORD, word);
+
+        // insert row
+        long id = db.update(TABLE_WORD, values, "WHERE id=" + _id, null);
+        return id;
+    }
+
+    private void EditMeaning(List<String> meanings, long wordID) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (String meaning : meanings) {
+            ContentValues values = new ContentValues();
+            values.put(COL_MEANING, meaning);
+            values.put(COL_FK_WORD_ID, wordID);
+            db.update(TABLE_MEANING, values, "WHERE " + COL_FK_WORD_ID  + "=" + wordID, null);
+        }
+    }
+
+    private void EditExample(List<String> meanings, long wordID) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (String meaning : meanings) {
+            ContentValues values = new ContentValues();
+            values.put(COL_EXAMPLE, meaning);
+            values.put(COL_FK_WORD_ID, wordID);
+            db.update(TABLE_EXAMPLE, values, "WHERE " + COL_FK_WORD_ID  + "=" + wordID, null);
+        }
+    }
+
     public List<Word> getWordList() {
 
         if(!DB_AVAIALBLE)
@@ -233,7 +284,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         Vocab vocab = new Vocab();
         //getWord
-        vocab.setWord(getColunmWordById(id));
+        vocab.setWord(getWordById(id));
         //getMeaning
         vocab.setMeaning(getMeaningsByid(id));
         //getExample
@@ -242,20 +293,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return vocab;
     }
 
-    private String getColunmWordById(int id) {
-
-        String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " WHERE "+ COL_ID + " = " + id;
-        Log.e(LOG, SELECT_WORD);
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(SELECT_WORD, null);
-
-        if (c != null)
-            c.moveToFirst();
-
-        String word = c.getString(c.getColumnIndex(COL_WORD));
-        return word;
-    }
+//    private Word getWordById(int id) {
+//
+//        String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " WHERE "+ COL_ID + " = " + id;
+//        Log.e(LOG, SELECT_WORD);
+//
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor c = db.rawQuery(SELECT_WORD, null);
+//
+//        if (c != null)
+//            c.moveToFirst();
+//
+//
+//        Word word = new Word();
+//        word.setWord( c.getString(c.getColumnIndex(COL_WORD)) );
+//        word.setId(c.get);
+//        return word;
+//    }
 
     private List<String> getMeaningsByid(int wordId) {
         List<String> meanings= new ArrayList<String>();
