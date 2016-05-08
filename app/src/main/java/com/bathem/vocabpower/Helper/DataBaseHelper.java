@@ -208,10 +208,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public long editVocab(Vocab vocab) {
 
-        long id;
-        id = editWordbyId(vocab.getWord().getWord(), vocab.getWord().getId());
-
-        if(id != ERROR_IN_QUERY) {
+        long result;
+        int id = vocab.getWord().getId();
+        result = editWordbyId(vocab.getWord().getWord(), vocab.getWord().getId());
+        
+        if(result != ERROR_IN_QUERY) {
 
             editMeaning(vocab.getMeaning(), id);
             editExample(vocab.getExample(), id);

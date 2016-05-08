@@ -207,9 +207,8 @@ public class AddEditFragment extends Fragment {
     }
 
     long addVocabInDB(Vocab vocab) {
-        DataBaseHelper db = new DataBaseHelper(getActivity().getApplicationContext());
 
-        long result = db.addVocab(vocab);
+        long result = DataModel.addVocab(vocab, getActivity());
 
         CharSequence text;
 
@@ -223,7 +222,6 @@ public class AddEditFragment extends Fragment {
         }
         return result;
     }
-
 
     void hideAddButtons() {
         Button btnAddField = (Button) getActivity().findViewById(R.id.button_add_meaning_field);
@@ -267,9 +265,8 @@ public class AddEditFragment extends Fragment {
     }
 
     long editVocabInDB(Vocab vocab) {
-        DataBaseHelper db = new DataBaseHelper(getActivity().getApplicationContext());
 
-        long result = db.editVocab(vocab);
+        long result = DataModel.editVocab(vocab, getActivity());
 
         CharSequence text;
 

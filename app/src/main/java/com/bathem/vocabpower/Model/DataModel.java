@@ -74,4 +74,16 @@ public class DataModel {
     public static void setCurrentVocab(Vocab sCurrentVocab) {
         DataModel.sCurrentVocab = sCurrentVocab;
     }
+
+    public static long addVocab(Vocab vocab, Context context) {
+        DataBaseHelper db = new DataBaseHelper(context);
+        long result = db.addVocab(vocab);
+        return result;
+    }
+
+    public static long editVocab(Vocab vocab, Context context) {
+        DataBaseHelper db = new DataBaseHelper(context);
+        long result = db.editVocab(vocab);
+        return  result;
+    }
 }
