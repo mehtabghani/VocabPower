@@ -141,6 +141,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // insert row
         long id = db.insert(TABLE_CATEGORY, null, values);
+        db.close();
 
         return id;
     }
@@ -171,6 +172,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // insert row
         long id = db.insert(TABLE_WORD, null, values);
+        db.close();
+
         return id;
     }
 
@@ -184,6 +187,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put(COL_FK_WORD_ID, wordID);
             db.insert(TABLE_MEANING, null, values);
         }
+
+        db.close();
     }
 
     private void addExample(List<String> examples, long wordID) {
@@ -196,6 +201,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put(COL_FK_WORD_ID, wordID);
             db.insert(TABLE_EXAMPLE, null, values);
         }
+
+        db.close();
     }
 
 
@@ -206,8 +213,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         if(id != ERROR_IN_QUERY) {
 
-            addMeaning(vocab.getMeaning(), id);
-            addExample(vocab.getExample(), id);
+            editMeaning(vocab.getMeaning(), id);
+            editExample(vocab.getExample(), id);
         }
 
         return id;
@@ -220,12 +227,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_WORD, word);
 
-        // insert row
-        long id = db.update(TABLE_WORD, values, "WHERE id=" + _id, null);
+        long id = db.update(TABLE_WORD, values, COL_ID + "= ?", new String[]{String.valueOf(_id)});
+        db.close();
         return id;
     }
 
-    private void EditMeaning(List<String> meanings, long wordID) {
+    private void editMeaning(List<String> meanings, long wordID) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -233,11 +240,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(COL_MEANING, meaning);
             values.put(COL_FK_WORD_ID, wordID);
-            db.update(TABLE_MEANING, values, "WHERE " + COL_FK_WORD_ID  + "=" + wordID, null);
+            db.update(TABLE_MEANING, values, COL_FK_WORD_ID + "= ?", new String[]{ String.valueOf(wordID) } );
         }
+            db.close();
     }
 
-    private void EditExample(List<String> meanings, long wordID) {
+    private void editExample(List<String> meanings, long wordID) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -245,8 +253,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(COL_EXAMPLE, meaning);
             values.put(COL_FK_WORD_ID, wordID);
-            db.update(TABLE_EXAMPLE, values, "WHERE " + COL_FK_WORD_ID  + "=" + wordID, null);
+            db.update(TABLE_EXAMPLE, values, COL_FK_WORD_ID  + "= ? ", new String[]{String.valueOf(wordID) } );
         }
+        db.close();
     }
 
     public List<Word> getWordList() {
@@ -273,7 +282,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
               words.add(word);
           } while (c.moveToNext());
         }
-
+        db.close();
         return words;
     }
 
@@ -326,6 +335,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 meanings.add(meaning);
             } while (c.moveToNext());
         }
+
+        db.close();
+
         return meanings;
     }
 
@@ -344,6 +356,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 examples.add(example);
             } while (c.moveToNext());
         }
+
+        db.close();
+
         return examples;
     }
 
@@ -364,6 +379,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
         String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
         word.setCreateAt(Utils.getDateFromString(date));
+        db.close();
+
         return word;
     }
 }

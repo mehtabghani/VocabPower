@@ -109,7 +109,7 @@ public class AddEditFragment extends Fragment {
         LinearLayout dynamicview = layout;
 
         LinearLayout.LayoutParams lprams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         EditText editText = new EditText(getActivity());
@@ -230,7 +230,6 @@ public class AddEditFragment extends Fragment {
         btnAddField.setVisibility(View.INVISIBLE);
         btnAddField = (Button) getActivity().findViewById(R.id.button_add_example_field);
         btnAddField.setVisibility(View.INVISIBLE);
-
     }
 
     void prepareFieldsForEditMode () {
@@ -250,6 +249,43 @@ public class AddEditFragment extends Fragment {
 
     public void editVocab() {
 
+        try {
+            validateFields();
+            prepareVocabs();
+            Vocab vocab = new Vocab();
+            Word _word = new Word();
+            _word.setId(DataModel.getCurrentVocab().getWord().getId());
+            _word.setWord(word);
+            vocab.setVocab(_word, meanings, examples);
+            long id = editVocabInDB(vocab);
+            refreshDataModel(id);
+        } catch (ValidationException e) {
+            e.printStackTrace();
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), e.getErrorMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    long editVocabInDB(Vocab vocab) {
+        DataBaseHelper db = new DataBaseHelper(getActivity().getApplicationContext());
+
+        long result = db.editVocab(vocab);
+
+        CharSequence text;
+
+        if(result == -1) {
+            text = "Failed to update vocab.";
+        } else {
+            getActivity().onBackPressed();
+            text = "Vocab updated successfully.";
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        return result;
+    }
+
+    private void refreshDataModel(long id) {
+        DataModel.getWordList(getActivity());
     }
 
 }

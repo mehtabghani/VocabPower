@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.R;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         }
 
         TextView tv = (TextView) convertView.findViewById(R.id.vocab_cell_label);
-        tv.setText(word.getWord());
+        tv.setText(StringUtil.capitalizeFirstLetter( word.getWord() ));
 
        final CheckBox cb = (CheckBox) convertView.findViewById(R.id.vocab_cell_checkBox);
 

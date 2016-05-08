@@ -50,12 +50,18 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mID = getArguments().getInt(VOCAB_ID, 0);
-        getData();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+
         if(mVocab != null) {
             updateFields();
         }

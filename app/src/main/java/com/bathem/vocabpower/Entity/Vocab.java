@@ -13,20 +13,6 @@ public class Vocab {
      private List<String> meaning;
      private List<String> example;
 
-
-//    public String getWord() {
-//
-//        return word;
-//    }
-//
-//    public void setWord(String word) {
-//
-//        this.word = word;
-//    }
-
-
-
-
     public List<String> getMeaning() {
         return meaning;
     }
