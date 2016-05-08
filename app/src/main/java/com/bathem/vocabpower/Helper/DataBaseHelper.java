@@ -211,7 +211,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long result;
         int id = vocab.getWord().getId();
         result = editWordbyId(vocab.getWord().getWord(), vocab.getWord().getId());
-        
+
         if(result != ERROR_IN_QUERY) {
 
             editMeaning(vocab.getMeaning(), id);
@@ -370,6 +370,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.e(LOG, SELECT_WORD);
 
         SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor c = db.rawQuery(SELECT_WORD, null);
 
         if (c != null)
@@ -383,5 +384,44 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return word;
+    }
+
+    public void deleteVocabs(List<Integer> ids) {
+
+        for (Integer id:ids) {
+            deleteWordById(id);
+            deleteMeaningByWordId(id);
+            deleteExampleByWordId(id);
+        }
+    }
+
+    public void deleteWordById(int id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(db == null)
+            return;
+
+        db.delete(TABLE_WORD, COL_ID + "= ?", new String[] { String.valueOf(id) });
+        db.close();
+    }
+
+    public void deleteMeaningByWordId(int wordId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(db == null)
+            return;
+
+        db.delete(TABLE_MEANING, COL_FK_WORD_ID + "= ?", new String[] { String.valueOf(wordId) });
+        db.close();
+    }
+
+    public void deleteExampleByWordId(int wordId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(db == null)
+            return;
+
+        db.delete(TABLE_EXAMPLE, COL_FK_WORD_ID + "= ?", new String[] { String.valueOf(wordId) });
+        db.close();
     }
 }

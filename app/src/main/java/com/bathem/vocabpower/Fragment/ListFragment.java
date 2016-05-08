@@ -119,19 +119,28 @@ public class ListFragment extends Fragment {
     }
 
     void deleteItems () {
-        Log.d("debug", "deleteItems");
-
         ArrayList<Integer> ids = adapter.getListOfItemsToBeDelete();
 
         if(ids != null && ids.size() > 0) {
+
+            DataModel.deleteVocab(ids, getActivity());
+
             for (Integer id:ids) {
                 Log.d("debug", "delete id:" + id);
             }
-            adapter.notifyDataSetChanged();
+
+            refreshListView();
         } else {
             Log.d("debug", "None of the item selected.");
         }
         adapter.clearDeleteItemList();
+    }
+
+    void refreshListView () {
+
+        DataModel.refreshWordList(getActivity());
+        adapter.notifyDataSetChanged();
+
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-
+    RandomVocabFragment mRandomFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +44,18 @@ public class MainActivity extends BaseActivity {
     }
 
     void addRandomVocabFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mRandomFragment == null)
+            mRandomFragment = new RandomVocabFragment();
 
         if(getRandomVocab() == null) {
             Log.d("debug", "No random vocab available.");
             setPaddingOfRandomFrameLayout(200);
-            return;
+            ft.remove(mRandomFragment);
         } else {
             setPaddingOfRandomFrameLayout(10);
+            ft.replace(R.id.frameLayout_random_vocab, mRandomFragment);
         }
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frameLayout_random_vocab, new RandomVocabFragment());
         ft.commit();
     }
 

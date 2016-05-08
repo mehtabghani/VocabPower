@@ -9,6 +9,7 @@ import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,17 @@ public class DataModel {
 
     public static List<Word> getWordList(Context context) {
         DataBaseHelper db = new DataBaseHelper(context);
-        sWords = db.getWordList();
+
+
+        List<Word> words = db.getWordList();
+
+        if(sWords == null) {
+            sWords = new ArrayList<Word>();
+        }   else {
+            sWords.clear();
+        }
+        sWords.addAll(words);
+
         return sWords;
     }
 
@@ -85,5 +96,14 @@ public class DataModel {
         DataBaseHelper db = new DataBaseHelper(context);
         long result = db.editVocab(vocab);
         return  result;
+    }
+
+    public static void deleteVocab(List<Integer> ids, Context context) {
+        DataBaseHelper db = new DataBaseHelper(context);
+         db.deleteVocabs(ids);
+    }
+
+    public static void refreshWordList (Context context) {
+        DataModel.getWordList(context);
     }
 }

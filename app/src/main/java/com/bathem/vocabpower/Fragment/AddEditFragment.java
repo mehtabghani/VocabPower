@@ -256,7 +256,7 @@ public class AddEditFragment extends Fragment {
             _word.setWord(word);
             vocab.setVocab(_word, meanings, examples);
             long id = editVocabInDB(vocab);
-            refreshDataModel(id);
+            refreshDataModel();
         } catch (ValidationException e) {
             e.printStackTrace();
             Toast toast = Toast.makeText(getActivity().getApplicationContext(), e.getErrorMessage(), Toast.LENGTH_SHORT);
@@ -281,8 +281,9 @@ public class AddEditFragment extends Fragment {
         return result;
     }
 
-    private void refreshDataModel(long id) {
-        DataModel.getWordList(getActivity());
+    private void refreshDataModel()
+    {
+        DataModel.refreshWordList(getActivity());
     }
 
 }
