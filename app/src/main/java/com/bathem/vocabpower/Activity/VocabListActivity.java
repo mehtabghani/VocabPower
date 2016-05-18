@@ -103,7 +103,7 @@ public class VocabListActivity extends BaseActivity {
         });
     }
 
-    void showAddVocabButton (int v) {
+    public void showAddVocabButton (int v) {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_fab_list_add_vocab);
         fab.setVisibility(v);
@@ -126,6 +126,7 @@ public class VocabListActivity extends BaseActivity {
     void onDeleteActionButtonPressed() {
         if(listFragment != null) {
             listFragment.onDeleteActionButtonPressed();
+
         }
     }
 

@@ -112,11 +112,15 @@ public class ListFragment extends Fragment {
         if(adapter.getVisibilityOfCheckBox() == false) {
             adapter.setVisibilityOfCheckBox(true);
             adapter.notifyDataSetChanged();
+            VocabListActivity activity = (VocabListActivity) getActivity();
+            activity.showAddVocabButton(View.INVISIBLE);
         } else {
             //delete
             adapter.setVisibilityOfCheckBox(false);
             adapter.notifyDataSetChanged();
             deleteItems();
+            VocabListActivity activity = (VocabListActivity) getActivity();
+            activity.showAddVocabButton(View.VISIBLE);
         }
     }
 
