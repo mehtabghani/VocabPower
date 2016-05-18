@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Adapter.VocabListAdapter;
@@ -73,6 +74,7 @@ public class ListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         words = (ArrayList<Word>) DataModel.getCurrentWordList();
+        showNoWordAvailableIfNeeded();
         adapter.notifyDataSetChanged();
     }
 
@@ -140,7 +142,12 @@ public class ListFragment extends Fragment {
 
         DataModel.refreshWordList(getActivity());
         adapter.notifyDataSetChanged();
+        showNoWordAvailableIfNeeded();
+    }
 
+    void showNoWordAvailableIfNeeded () {
+        TextView textView = (TextView) getActivity().findViewById(R.id.textView_no_word_available);
+        textView.setVisibility((words == null || words.size() <= 0) ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

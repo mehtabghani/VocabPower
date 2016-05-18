@@ -7,7 +7,6 @@ import android.util.Log;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
-import com.bathem.vocabpower.Helper.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +65,11 @@ public class DataModel {
             Log.d("debug", "No word list available for random words prepartion.");
             return null;
         }
-
-        int id = Utils.getRandomNumber(1, sWords.size());
+//
+//        int id = Utils.getRandomNumber(1, sWords.size());
 
         DataBaseHelper db = new DataBaseHelper(context);
-        sCurrentRandomVocab = db.getVocabByID(id);
+        sCurrentRandomVocab = db.getRandomVocab();
         return sCurrentRandomVocab;
     }
 

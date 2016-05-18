@@ -421,7 +421,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(db == null)
             return;
 
-        db.delete(TABLE_EXAMPLE, COL_FK_WORD_ID + "= ?", new String[] { String.valueOf(wordId) });
+        db.delete(TABLE_EXAMPLE, COL_FK_WORD_ID + "= ?", new String[]{String.valueOf(wordId)});
         db.close();
+    }
+    
+    public Vocab getRandomVocab () {
+
+        Vocab vocab = new Vocab();
+        Word word = getRandomWord();
+        vocab.setWord(word);
+        vocab.setMeaning(getMeaningsByid(word.getId()));
+        vocab.setExample(getExamplesByid(word.getId()));
+
+        return vocab;
+    }
+
+    public Word getRandomWord() {
+
+        String SELECT_WORD = "SELECT * FROM " + TABLE_WORD + " ORDER BY RANDOM() LIMIT 1";
+        Log.e(LOG, SELECT_WORD);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.rawQuery(SELECT_WORD, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Word word = new Word();
+        word.setId(c.getInt(c.getColumnIndex(COL_ID)));
+        word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
+        String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
+        word.setCreateAt(Utils.getDateFromString(date));
+        db.close();
+
+        return word;
     }
 }
