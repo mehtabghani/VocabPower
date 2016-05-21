@@ -40,8 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_TYPE = "type";
     private static final String TABLE_CATEGORY = "category";
     private static final String TABLE_WORD_CATEGORY = "word_category";
-
-
+    
     // Common column names
     private static final String COL_ID = "id";
     private static final String COL_WORD = "word";
@@ -146,6 +145,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    // Add Methods
+
     public long addVocab(Vocab vocab) {
 
         long id;
@@ -205,6 +206,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Update Methods
 
     public long editVocab(Vocab vocab) {
 
@@ -258,6 +260,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    //Get Methods
 
     public List<Word> getWordList() {
 
@@ -386,6 +390,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return word;
     }
 
+
+    //Delete Methods
+
+
     public void deleteVocabs(List<Integer> ids) {
 
         for (Integer id:ids) {
@@ -424,7 +432,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_EXAMPLE, COL_FK_WORD_ID + "= ?", new String[]{String.valueOf(wordId)});
         db.close();
     }
-    
+
     public Vocab getRandomVocab () {
 
         Vocab vocab = new Vocab();
@@ -435,6 +443,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return vocab;
     }
+
+    //Random word Method
 
     public Word getRandomWord() {
 
