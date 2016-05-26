@@ -6,13 +6,18 @@
         android:id="@+id/menu_group_edit_delete">
 
         <item android:id="@+id/action_delete"
-            android:title="@string/action_button_done"
+            android:title="@string/action_button_delete"
             android:icon="@drawable/icon_delete_white_24dp"
             app:showAsAction="always"/>
 
         <item android:id="@+id/action_edit"
-            android:title="@string/action_button_done"
+            android:title="@string/action_button_edit"
             android:icon="@drawable/icon_mode_edit_white_24dp"
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/action_favourite"
+            android:title="@string/action_button_favourite"
+            android:icon="@drawable/icon_favorite_white_24dp"
             app:showAsAction="always"/>
 
     </group>

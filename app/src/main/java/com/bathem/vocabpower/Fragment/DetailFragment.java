@@ -138,5 +138,12 @@ public class DetailFragment extends Fragment {
         Log.d("debug", "onEditActionButtonPressed");
         Intent intent = new Intent(getActivity(), AddVocabActivity.class);
         intent.putExtra(AddVocabActivity.ADD_EDIT_MODE, AddEditMode.edit_mode.ordinal());
-        startActivity(intent);    }
+        startActivity(intent);
+    }
+
+    public void onFavouriteActionButtonPressed() {
+        Log.d("debug", "onFavouriteActionButtonPressed");
+
+
+    }
 }

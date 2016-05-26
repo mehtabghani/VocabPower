@@ -157,6 +157,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_edit).setVisible(false);
+        menu.findItem(R.id.action_favourite).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 

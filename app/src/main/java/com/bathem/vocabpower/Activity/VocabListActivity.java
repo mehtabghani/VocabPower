@@ -36,7 +36,7 @@ public class VocabListActivity extends BaseActivity {
     public boolean onCreateOptionsMenu( Menu menu ) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_delete_vocab, menu);
+        inflater.inflate(R.menu.list_menu, menu);
 
         return super.onCreateOptionsMenu( menu );
     }
@@ -51,6 +51,10 @@ public class VocabListActivity extends BaseActivity {
 
             case R.id.action_edit:
                 onEditActionButtonPressed();
+                return true;
+
+            case R.id.action_favourite:
+                onFavouriteActionButtonPressed();
                 return true;
 
             default:
@@ -134,6 +138,12 @@ public class VocabListActivity extends BaseActivity {
          if(detailFragment != null) {
             detailFragment.onEditActionButtonPressed();
          }
+    }
+
+    void onFavouriteActionButtonPressed() {
+        if(detailFragment != null) {
+            detailFragment.onFavouriteActionButtonPressed();
+        }
     }
 
 }
