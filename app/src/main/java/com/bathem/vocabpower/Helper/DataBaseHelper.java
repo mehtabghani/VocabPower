@@ -31,7 +31,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "vocabsDB";
+    public static final String DATABASE_NAME = "vocabsDB";
 
     // Table Names
     private static final String TABLE_WORD = "word";
