@@ -9,4 +9,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.bathem.vocabpower.Activity.SettingsActivity">
 
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Google Drive Backup"
+        android:id="@+id/button_google_drive_backup"/>
+
 </RelativeLayout>
