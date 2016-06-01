@@ -19,7 +19,12 @@ import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.query.Filters;
+import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SearchableField;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -37,12 +42,13 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     private static final String TAG = "GoogleDrive";
     private static final int REQUEST_CODE_RESOLUTION = 3;
     private static final String DATABASE_NAME = DataBaseHelper.DATABASE_NAME;
-    private static final String GOOGLE_DRIVE_FILE_NAME = "VocabMaterBackup.db";
+    private static final String GOOGLE_DRIVE_FILE_NAME = "VocabMasterBackup.db";
 
     private static GoogleDriveManager mManager;
     private DriveFile mfile;
     private GoogleApiClient mGoogleApiClient;
     private Activity mActivity;
+    private DriveId mIDDriveDBFile;
 
 
     public static GoogleDriveManager getInstance() {
@@ -65,13 +71,91 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 .build();
     }
 
+    public void connect() {
+        if(mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
     //callbacks
 
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "API client connected.");
-        Drive.DriveApi.newDriveContents(mGoogleApiClient).setResultCallback(contentsCallback);
+
+
+        // TODO check if file exist remove it
+            checkIfFileExist(GOOGLE_DRIVE_FILE_NAME);
+
+
+         //Drive.DriveApi.newDriveContents(mGoogleApiClient).setResultCallback(contentsCallback);
+
     }
+
+    void checkIfFileExist(final String fileName) {
+        Query query = new Query.Builder()
+                .addFilter(Filters.eq(SearchableField.TITLE, fileName))
+                .build();
+
+        Drive.DriveApi.query(mGoogleApiClient, query).setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+            @Override
+            public void onResult(DriveApi.MetadataBufferResult result) {
+                if (!result.getStatus().isSuccess()) {
+                    Log.v(TAG, "Error while trying to search DB file " + result.getStatus().getStatusMessage());
+                }
+
+                for (Metadata m : result.getMetadataBuffer()) {
+                    if (m.getTitle().equals(fileName)) {
+                        Log.v(TAG, m.getTitle() + " File exist");
+                        deleteFile(m.getDriveId());
+                        break;
+                    }
+                }
+
+            }
+        });
+
+    }
+
+    void deleteFile(DriveId id) {
+
+        DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, id);
+        //file.getMetadata(mGoogleApiClient).setResultCallback(metadataRetrievedCallback);
+        driveFile.delete(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+               if(status.getStatus().isSuccess())
+                   Log.d(TAG, "file deleted.");
+            }
+        });
+    }
+
+//    ResultCallback<DriveResource.MetadataResult> metadataRetrievedCallback = new
+//            ResultCallback<DriveResource.MetadataResult>() {
+//                @Override
+//                public void onResult(DriveResource.MetadataResult result) {
+//                    if (!result.getStatus().isSuccess()) {
+//                        Log.d(TAG, "Problem while trying to fetch metadata");
+//                        return;
+//                    }
+//                    Metadata metadata = result.getMetadata();
+//                    Log.d(TAG, "Metadata succesfully fetched. Title: " + metadata.getTitle());
+//
+//
+//
+//
+//                    if (result.getMetadata().isTrashable()) {
+//                        if (result.getMetadata().isTrashed()) {
+//                            driveResource.untrash(mGoogleApiClient).setResultCallback(trashStatusCallback);
+//                        } else {
+//                            driveResource.trash(mGoogleApiClient).setResultCallback(trashStatusCallback);
+//                        }
+//                    } else {
+//                        Log.d(TAG, "Resource is not owned by the user or is in the AppFolder.");
+//                    }
+//
+//                }
+//            };
+
 
     final private ResultCallback<DriveApi.DriveContentsResult> contentsCallback = new
             ResultCallback<DriveApi.DriveContentsResult>() {
@@ -83,18 +167,30 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                         return;
                     }
 
-                    String mimeType = MimeTypeMap.getSingleton().getExtensionFromMimeType("db");
-                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                            .setTitle(GOOGLE_DRIVE_FILE_NAME) // Google Drive File name
-                            .setMimeType(mimeType)
-                            .setStarred(true).build();
                     // create a file on root folder
-                    Drive.DriveApi.getRootFolder(mGoogleApiClient)
-                            .createFile(mGoogleApiClient, changeSet, result.getDriveContents())
-                            .setResultCallback(fileCallback);
+                    createFile(result);
                 }
-
             };
+
+    void createFile(DriveApi.DriveContentsResult result) {
+
+        String mimeType = MimeTypeMap.getSingleton().getExtensionFromMimeType("db");
+        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                .setTitle(GOOGLE_DRIVE_FILE_NAME) // Google Drive File name
+                .setMimeType(mimeType)
+                .setStarred(true).build();
+
+        // create a file on root folder
+
+        Drive.DriveApi.getRootFolder(mGoogleApiClient)
+                .createFile(mGoogleApiClient, changeSet, result.getDriveContents())
+                .setResultCallback(fileCallback);
+
+
+//        Drive.DriveApi.getAppFolder(mGoogleApiClient)
+//                .createFile(mGoogleApiClient, changeSet, result.getDriveContents())
+//                .setResultCallback(fileCallback);
+    }
 
     final private ResultCallback<DriveFolder.DriveFileResult> fileCallback = new
             ResultCallback<DriveFolder.DriveFileResult>() {
@@ -107,6 +203,8 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                     }
                     mfile = result.getDriveFile();
                     mfile.open(mGoogleApiClient, DriveFile.MODE_WRITE_ONLY, null).setResultCallback(contentsOpenedCallback);
+                    mIDDriveDBFile = result.getDriveFile().getDriveId();
+                    Log.d(TAG, "Google Drive File ID:" + mIDDriveDBFile);
                 }
             };
 
@@ -162,7 +260,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
     private File getDbPath() {
         File file = mActivity.getDatabasePath(DATABASE_NAME);
-        Log.d(TAG, "DB path: "+ file.getAbsolutePath());
+        Log.d(TAG, "DB path: " + file.getAbsolutePath());
         return file;
     }
 
@@ -204,11 +302,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-
-    public void connect() {
-        if(mGoogleApiClient != null)
-            mGoogleApiClient.connect();
-    }
 
     public void onStop() {
         mGoogleApiClient.disconnect(); // Disconnect the client from Google Drive
