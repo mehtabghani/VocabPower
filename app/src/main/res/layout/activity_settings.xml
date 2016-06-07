@@ -16,4 +16,11 @@
         android:text="Google Drive Backup"
         android:id="@+id/button_google_drive_backup"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_google_drive_backup"
+        android:text="Google Drive Restore DB"
+        android:id="@+id/button_google_drive_restore"/>
+
 </RelativeLayout>

@@ -10,7 +10,11 @@ import android.util.Log;
 import com.bathem.vocabpower.Entity.Category;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -466,5 +470,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return word;
+    }
+
+    public  void restoreDB(InputStream is, Context context) {
+        Context ctx = context;
+        try {
+            File file = ctx.getDatabasePath(ctx.getString(R.string.app_name));
+            if (file.exists())
+                file.delete();
+            FileOutputStream mOutput = new FileOutputStream(file);
+            byte[] mBuffer = new byte[1024];
+            int mLength;
+            while ((mLength = is.read(mBuffer)) > 0) {
+                mOutput.write(mBuffer, 0, mLength);
+            }
+            mOutput.flush();
+        } catch (Exception e) {}
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 
+import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Manager.GoogleDriveManager;
 import com.bathem.vocabpower.R;
@@ -45,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         mDriveManager = GoogleDriveManager.getInstance();
         initBackupButton();
+        initRestoreButton();
     }
 
     void initBackupButton() {
@@ -52,7 +54,18 @@ public class SettingsActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDriveManager.initGoogleClient(SettingsActivity.this);
+                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup);
+                mDriveManager.connect();
+            }
+        });
+    }
+
+    void initRestoreButton() {
+        Button btn = (Button) findViewById(R.id.button_google_drive_restore);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore );
                 mDriveManager.connect();
             }
         });

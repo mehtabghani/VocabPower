@@ -1,14 +1,18 @@
 package com.bathem.vocabpower.Manager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
+import com.bathem.vocabpower.Interface.IDriveListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +36,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by mehtab on 5/29/16.
@@ -51,6 +56,9 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     private Activity mActivity;
     private DriveId mIDDriveDBFile;
     private DriveId mIDDriveDBFolder;
+    private Context mAppContext;
+    DataBaseHelper mDBHelper;
+    private DriveMode mDriveMode;
 
 
     public static GoogleDriveManager getInstance() {
@@ -63,7 +71,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    public void initGoogleClient(Activity activity) {
+    public void initGoogleClient(Activity activity, DriveMode mode) {
         mActivity = activity;
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Drive.API)
@@ -71,6 +79,8 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+        mDriveMode = mode;
+
     }
 
     public void connect() {
@@ -83,12 +93,33 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "API client connected.");
-       // checkIfFileExist(GOOGLE_DRIVE_FILE_NAME);
-        checkIfFileExist(GOOGLE_DRIVE_FOLDER_NAME);
+
+        if(mDriveMode == DriveMode.backup)
+            createBackUpFile();
+        else if(mDriveMode == DriveMode.restore)
+            restoreDB();
 
     }
 
-    void checkIfFileExist(final String fileName) {
+    void createBackUpFile() {
+        Log.d(TAG, "createBackUpFile");
+        // checkIfFileExist(GOOGLE_DRIVE_FILE_NAME);
+        checkIfFileExist(GOOGLE_DRIVE_FOLDER_NAME, new IDriveListener() {
+            @Override
+            public void onFileExist(DriveId id) {
+
+                //deleteFile(id);
+                deleteFolder(id);
+            }
+
+            @Override
+            public void onFileDoesNotExist() {
+                createDBFile();
+            }
+        });
+    }
+
+    void checkIfFileExist(final String fileName,final IDriveListener driveListener) {
         Query query = new Query.Builder()
                 .addFilter(Filters.eq(SearchableField.TITLE, fileName))
                 .build();
@@ -107,14 +138,15 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                     if (m.getTitle().equals(fileName)) {
                         Log.v(TAG, m.getTitle() + " file exist");
                         isFileExist = true;
-                        //deleteFile(m.getDriveId());
-                        deleteFolder(m.getDriveId());
+                        if(driveListener != null)
+                            driveListener.onFileExist(m.getDriveId());
                         break;
                     }
                 }
 
                 if (!isFileExist) {
-                    createDBFile();
+                    if(driveListener != null)
+                        driveListener.onFileDoesNotExist();
                     Log.v(TAG, fileName + " doesn't exist");
                 }
             }
@@ -201,7 +233,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
         //creat file inside folder
         Drive.DriveApi.getFolder(mGoogleApiClient, mIDDriveDBFolder).createFile(mGoogleApiClient, changeSet, result.getDriveContents())
                 .setResultCallback(fileCallback);
-        
+
         // create a file on root folder
 
 //        Drive.DriveApi.getRootFolder(mGoogleApiClient)
@@ -223,6 +255,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                         Log.v(TAG, "Error while trying to create the file");
                         return;
                     }
+
                     mfile = result.getDriveFile();
                     mfile.open(mGoogleApiClient, DriveFile.MODE_WRITE_ONLY, null).setResultCallback(contentsOpenedCallback);
                     mIDDriveDBFile = result.getDriveFile().getDriveId();
@@ -313,6 +346,43 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
     }
 
+    public void restoreDB() {
+        Log.d(TAG, "restoreDB");
+        mAppContext =    mActivity.getApplication();
+        mDBHelper = new DataBaseHelper(mActivity);
+        downloadFile(GOOGLE_DRIVE_FILE_NAME);
+    }
+
+    public void downloadFile(String fileName) {
+
+        checkIfFileExist(fileName, new IDriveListener() {
+            @Override
+            public void onFileExist(DriveId id) {
+                DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, id);
+                driveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY, null).setResultCallback(readContentResult);
+            }
+
+            @Override
+            public void onFileDoesNotExist() {
+
+            }
+        });
+
+    }
+
+    final ResultCallback<DriveApi.DriveContentsResult> readContentResult= new ResultCallback<DriveApi.DriveContentsResult>() {
+        @Override
+        public void onResult(DriveApi.DriveContentsResult result) {
+            if (!result.getStatus().isSuccess()) {
+                Log.d(TAG, "onResult: Error to load file");
+                return;
+            }
+            DriveContents contents = result.getDriveContents();
+            InputStream inputStream = contents.getInputStream();
+            mDBHelper.restoreDB(inputStream, mAppContext);
+        }
+    };
+
 
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
@@ -326,13 +396,13 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
 
     public void onStop() {
-        mGoogleApiClient.disconnect(); // Disconnect the client from Google Drive
+        if(mGoogleApiClient != null)
+            mGoogleApiClient.disconnect(); // Disconnect the client from Google Drive
 
     }
 
     public void onPause() {
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
-        }
     }
 }
