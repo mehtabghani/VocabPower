@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -47,7 +46,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     private static final String TAG = "GoogleDrive";
     private static final int REQUEST_CODE_RESOLUTION = 3;
     private static final String DATABASE_NAME = DataBaseHelper.DATABASE_NAME;
-    private static final String GOOGLE_DRIVE_FILE_NAME = "VocabMasterBackup.db";
+    private static final String GOOGLE_DRIVE_FILE_NAME = "VocabMaster.db";
     private static final String GOOGLE_DRIVE_FOLDER_NAME = "Vocab Master";
 
     private static GoogleDriveManager mManager;
@@ -377,6 +376,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 Log.d(TAG, "onResult: Error to load file");
                 return;
             }
+            Log.d(TAG, "File opened successfully and ready to restore");
             DriveContents contents = result.getDriveContents();
             InputStream inputStream = contents.getInputStream();
             mDBHelper.restoreDB(inputStream, mAppContext);

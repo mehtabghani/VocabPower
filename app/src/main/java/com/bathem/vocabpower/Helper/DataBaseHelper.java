@@ -5,16 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bathem.vocabpower.Entity.Category;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
-import com.bathem.vocabpower.R;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +38,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    public static final String DATABASE_NAME = "vocabsDB";
+    public static final String DATABASE_NAME = "VocabMaster";
 
     // Table Names
     private static final String TABLE_WORD = "word";
@@ -473,18 +476,48 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public  void restoreDB(InputStream is, Context context) {
-        Context ctx = context;
+//        Context ctx = context;
+//        try {
+//            File file = ctx.getDatabasePath(ctx.getString(R.string.app_name));
+//            if (file.exists())
+//                file.delete();
+//            FileOutputStream mOutput = new FileOutputStream(file);
+//            byte[] mBuffer = new byte[1024];
+//            int mLength;
+//            while ((mLength = is.read(mBuffer)) > 0) {
+//                mOutput.write(mBuffer, 0, mLength);
+//            }
+//            mOutput.flush();
+//            mOutput.close();
+//        } catch (Exception e) {}
+
+        importDB(is, context);
+    }
+
+
+    private void importDB(InputStream is, Context ctx) {
         try {
-            File file = ctx.getDatabasePath(ctx.getString(R.string.app_name));
-            if (file.exists())
-                file.delete();
-            FileOutputStream mOutput = new FileOutputStream(file);
-            byte[] mBuffer = new byte[1024];
-            int mLength;
-            while ((mLength = is.read(mBuffer)) > 0) {
-                mOutput.write(mBuffer, 0, mLength);
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//package name//databases//" + DATABASE_NAME;
+                String backupDBPath = DATABASE_NAME;
+                //File file = ctx.getDatabasePath(ctx.getString(R.string.app_name));
+
+                File currentDB = new File(data, currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(backupDB).getChannel();
+                    FileChannel dst = new FileOutputStream(currentDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Toast.makeText(ctx, "Database Restored successfully", Toast.LENGTH_SHORT).show();
+                }
             }
-            mOutput.flush();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 }
