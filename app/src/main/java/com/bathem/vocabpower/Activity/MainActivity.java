@@ -32,15 +32,19 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        addRandomVocabFragment();
+        refreshMainView();
     }
 
     void init() {
-        DataModel.getWordList(this);
-        addRandomVocabFragment();
+        refreshMainView();
         initListButton();
         initAddButton();
         initSettingsButton();
+    }
+
+    void refreshMainView() {
+        DataModel.getWordList(this);
+        addRandomVocabFragment();
     }
 
     void addRandomVocabFragment() {

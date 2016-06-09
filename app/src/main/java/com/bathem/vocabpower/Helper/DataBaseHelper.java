@@ -10,6 +10,8 @@ import android.util.Log;
 import com.bathem.vocabpower.Entity.Category;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.Enum.DriveMode;
+import com.bathem.vocabpower.Interface.IFileStatusListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -471,7 +473,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return word;
     }
 
-    public  void restoreDB(InputStream is, Context context) {
+    public  void restoreDB(InputStream is, Context context, IFileStatusListener fileStatusListener) {
         Context ctx = context;
         try {
             File file = ctx.getDatabasePath(DATABASE_NAME);
@@ -486,8 +488,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             mOutput.flush();
             mOutput.close();
             is.close();
-        } catch (Exception e) {}
-
+            fileStatusListener.onFileRestored();
+        } catch (Exception e) {
+            fileStatusListener.onFileFailed(DriveMode.restore);
+        }
     }
 
 }

@@ -1,39 +1,16 @@
 package com.bathem.vocabpower.Activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bathem.vocabpower.Enum.DriveMode;
-import com.bathem.vocabpower.Helper.DataBaseHelper;
+import com.bathem.vocabpower.Interface.IFileStatusListener;
 import com.bathem.vocabpower.Manager.GoogleDriveManager;
 import com.bathem.vocabpower.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Contents;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.MetadataChangeSet;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -54,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup);
+                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
                 mDriveManager.connect();
             }
         });
@@ -65,11 +42,38 @@ public class SettingsActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore );
+                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
                 mDriveManager.connect();
             }
         });
     }
+
+    IFileStatusListener fileListener = new IFileStatusListener() {
+        @Override
+        public void onFileRestored() {
+            Toast toast = Toast.makeText(getApplicationContext(), "Database has been restored.", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+        @Override
+        public void onFileUploaded() {
+            Toast toast = Toast.makeText(getApplicationContext(), "Database has been backed up.", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+        @Override
+        public void onFileFailed(DriveMode mode) {
+            String msg;
+
+            if(mode == DriveMode.backup)
+                msg = "Failed to upload database";
+            else
+                msg = "Failed to restore database";
+
+            Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    };
 
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         mDriveManager.onActivityResult(requestCode,resultCode,data);

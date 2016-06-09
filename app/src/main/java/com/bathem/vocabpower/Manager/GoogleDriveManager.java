@@ -7,11 +7,11 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Interface.IDriveListener;
+import com.bathem.vocabpower.Interface.IFileStatusListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,8 +56,9 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     private DriveId mIDDriveDBFile;
     private DriveId mIDDriveDBFolder;
     private Context mAppContext;
-    DataBaseHelper mDBHelper;
+    private DataBaseHelper mDBHelper;
     private DriveMode mDriveMode;
+    private IFileStatusListener mIFileStatusListener;
 
 
     public static GoogleDriveManager getInstance() {
@@ -70,7 +71,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    public void initGoogleClient(Activity activity, DriveMode mode) {
+    public void initGoogleClient(Activity activity, DriveMode mode, IFileStatusListener iFileStatusListener) {
         mActivity = activity;
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Drive.API)
@@ -79,6 +80,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .build();
         mDriveMode = mode;
+        mIFileStatusListener = iFileStatusListener;
 
     }
 
@@ -97,7 +99,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
             createBackUpFile();
         else if(mDriveMode == DriveMode.restore)
             restoreDB();
-
     }
 
     void createBackUpFile() {
@@ -155,7 +156,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
     void deleteFile(DriveId id) {
 
         DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, id);
-        //file.getMetadata(mGoogleApiClient).setResultCallback(metadataRetrievedCallback);
         driveFile.delete(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(Status status) {
@@ -299,14 +299,16 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                                     public void onResult(Status result) {
                                         // Handle the response status
                                         Log.d(TAG, "Uploading status: " + result.getStatus());
-                                        Toast toast = Toast.makeText(mActivity.getApplicationContext(), "Successfully backed up.", Toast.LENGTH_SHORT);
-                                        toast.show();
+                                        mIFileStatusListener.onFileUploaded();
                                     }
                                 });
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
+                        mIFileStatusListener.onFileFailed(DriveMode.backup);
+
                     } catch (IOException e) {
                         e.printStackTrace();
+                        mIFileStatusListener.onFileFailed(DriveMode.backup);
                     }
                 }
 
@@ -379,7 +381,7 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
             Log.d(TAG, "File opened successfully and ready to restore");
             DriveContents contents = result.getDriveContents();
             InputStream inputStream = contents.getInputStream();
-            mDBHelper.restoreDB(inputStream, mAppContext);
+            mDBHelper.restoreDB(inputStream, mAppContext, mIFileStatusListener);
         }
     };
 
