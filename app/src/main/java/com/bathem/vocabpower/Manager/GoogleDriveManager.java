@@ -80,7 +80,30 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .build();
         mDriveMode = mode;
+        initiateFileStatuslistener(iFileStatusListener);
+    }
+
+    private void initiateFileStatuslistener( IFileStatusListener iFileStatusListener) {
         mIFileStatusListener = iFileStatusListener;
+
+        if(mIFileStatusListener == null) {
+            mIFileStatusListener = new IFileStatusListener() {
+                @Override
+                public void onFileRestored() {
+
+                }
+
+                @Override
+                public void onFileUploaded() {
+
+                }
+
+                @Override
+                public void onFileFailed(DriveMode mode) {
+
+                }
+            };
+        }
 
     }
 
@@ -297,7 +320,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
                                     @Override
                                     public void onResult(Status result) {
-                                        // Handle the response status
                                         Log.d(TAG, "Uploading status: " + result.getStatus());
                                         mIFileStatusListener.onFileUploaded();
                                     }
@@ -305,7 +327,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         mIFileStatusListener.onFileFailed(DriveMode.backup);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         mIFileStatusListener.onFileFailed(DriveMode.backup);
@@ -395,7 +416,6 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
                 break;
         }
     }
-
 
     public void onStop() {
         if(mGoogleApiClient != null)
