@@ -13,7 +13,7 @@ public class SharedPreferenceHelper {
     static SharedPreferenceHelper sInstance;
     final static String DEFAULT_SHARED_PREFERNECE = "default_shared_preference";
 
-    public static SharedPreferenceHelper getsInstance() {
+    public static SharedPreferenceHelper getInstance() {
         if(sInstance ==  null)
             sInstance = new SharedPreferenceHelper();
 

@@ -84,6 +84,8 @@ public class ListFragment extends Fragment {
         super.onResume();
         words = (ArrayList<Word>) DataModel.getCurrentWordList();
         showNoWordAvailableIfNeeded();
+        String type = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
+        sortList(type);
         adapter.notifyDataSetChanged();
     }
 
@@ -95,15 +97,14 @@ public class ListFragment extends Fragment {
                 android.R.layout.simple_spinner_item, AppConstant.SORT_LIST_ARRAY);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dynamicSpinner.setAdapter(adapter);
-        String strType = SharedPreferenceHelper.getsInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
-        dynamicSpinner.setSelection(adapter.getPosition(strType)); //set previously set value
+        String strType = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
+        dynamicSpinner.setSelection(adapter.getPosition(strType)); //init with previously set value
 
         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String type = (String) parent.getItemAtPosition(position);
-                SharedPreferenceHelper.getsInstance().setSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE, type);
+                SharedPreferenceHelper.getInstance().setSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE, type);
                 sortList(type);
             }
 
@@ -149,7 +150,7 @@ public class ListFragment extends Fragment {
         adapter = new VocabListAdapter(getActivity(), words);
         adapter.setVisibilityOfCheckBox(false);
 
-        String strType = SharedPreferenceHelper.getsInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
+        String strType = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
 
         if(StringUtil.stringEmptyOrNull(strType))
             strType = AppConstant.SORT_LIST_ARRAY[0];
