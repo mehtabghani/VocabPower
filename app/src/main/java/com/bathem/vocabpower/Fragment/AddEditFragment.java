@@ -68,7 +68,7 @@ public class AddEditFragment extends Fragment {
            // initAddMeaningFieldButton();
            // initAddExampleFieldButton();
         } else {
-            hideAddButtons();
+           // hideAddButtons();
             prepareFieldsForEditMode();
         }
     }
