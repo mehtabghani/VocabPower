@@ -93,7 +93,9 @@ public class DetailFragment extends Fragment {
 
         for (String str: meanings) {
             String txt = StringUtil.capitalizeFirstLetter(str);
-            stringBuilder.append(index + ". "+ txt);
+            //stringBuilder.append(index + ". "+ txt);
+            stringBuilder.append(txt);
+
             Log.d("VOCAB", "Meaning:" + index + ". " + txt);
 
             if(meanings.size() > index)
@@ -117,7 +119,8 @@ public class DetailFragment extends Fragment {
             }
 
             String txt = StringUtil.capitalizeFirstLetter(str);
-            stringBuilder.append(index + ". " + txt);
+            //stringBuilder.append(index + ". " + txt);
+            stringBuilder.append(txt);
             Log.d("VOCAB", "Example:" + index + ". " + txt);
             stringBuilder.append("\n\n");
             index++;
