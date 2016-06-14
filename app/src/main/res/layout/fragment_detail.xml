@@ -36,6 +36,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
+                android:textIsSelectable="true"
                 android:text="test" />
 
 
@@ -62,6 +63,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
+                android:textIsSelectable="true"
                 />
 
             <TextView
@@ -75,7 +77,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="20dp"
                 android:layout_below="@+id/textView_detail_meaning"
-
                 />
 
             <TextView
@@ -89,7 +90,7 @@
                 android:layout_below="@+id/textView_title_example"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-
+                android:textIsSelectable="true"
                 />
 
         </LinearLayout>
