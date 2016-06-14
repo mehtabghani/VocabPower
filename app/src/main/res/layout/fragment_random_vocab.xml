@@ -27,8 +27,7 @@
             android:text="@string/title_word"
             android:id="@+id/textView_detail_word"
             android:textAlignment="center"
-            android:textSize="50dp"
-            android:textColor="#050000" />
+            android:textSize="40dp" />
 
     </LinearLayout>
 
@@ -41,7 +40,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"
-        android:textColor="#050000"
         android:text="@string/title_meaning"
         android:id="@+id/textView_detail_meaning" />
     </LinearLayout>

@@ -118,8 +118,9 @@ public class RandomVocabFragment extends Fragment {
         int index = 1;
 
         for (String str: meanings) {
-            String txt = StringUtil.capitalizeFirstLetter(str);
-            stringBuilder.append(index + ". "+ txt);
+            String txt = StringUtil.capitalizeFirstLetter(str.trim());
+            //stringBuilder.append(index + ". "+ txt);
+            stringBuilder.append(txt);
             Log.d("VOCAB", "Meaning:" + index + ". " + txt);
 
             if(meanings.size() > index)
