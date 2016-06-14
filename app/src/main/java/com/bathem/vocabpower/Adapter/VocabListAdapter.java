@@ -29,7 +29,6 @@ public class VocabListAdapter extends ArrayAdapter<Word> {
         super(context, 0, words);
         this.listOfItemsToBeDelete = new ArrayList<Integer>();
         setVisibilityOfCheckBox(false);
-        this.listHandler = listHandler;
     }
 
     @Override

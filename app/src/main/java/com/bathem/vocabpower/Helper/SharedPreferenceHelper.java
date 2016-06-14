@@ -25,6 +25,8 @@ public class SharedPreferenceHelper {
 
         String result = "";
         Context context = AppManager.getsInstance().getApplicationContext();
+
+
         SharedPreferences sharedPref = context.getSharedPreferences(DEFAULT_SHARED_PREFERNECE, Context.MODE_PRIVATE);
 
         if (sharedPref.contains(key))

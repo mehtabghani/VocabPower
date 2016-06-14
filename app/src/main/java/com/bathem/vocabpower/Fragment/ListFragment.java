@@ -9,16 +9,24 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bathem.vocabpower.Activity.VocabListActivity;
 import com.bathem.vocabpower.Adapter.VocabListAdapter;
+import com.bathem.vocabpower.Constant.AppConstant;
 import com.bathem.vocabpower.Entity.Word;
+import com.bathem.vocabpower.Enum.SortType;
+import com.bathem.vocabpower.Helper.SharedPreferenceHelper;
+import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by mehtab on 16/03/16.
@@ -59,6 +67,7 @@ public class ListFragment extends Fragment {
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        prepareDropDown();
         prepareListView();
     }
 
@@ -78,6 +87,33 @@ public class ListFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    void prepareDropDown () {
+
+        Spinner dynamicSpinner = (Spinner) getActivity().findViewById(R.id.spinner_sort_list);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, AppConstant.SORT_LIST_ARRAY);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dynamicSpinner.setAdapter(adapter);
+        String strType = SharedPreferenceHelper.getsInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
+        dynamicSpinner.setSelection(adapter.getPosition(strType)); //set previously set value
+
+        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String type = (String) parent.getItemAtPosition(position);
+                SharedPreferenceHelper.getsInstance().setSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE, type);
+                sortList(type);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
     void prepareListView() {
 
         words = (ArrayList<Word>) DataModel.getCurrentWordList();
@@ -87,8 +123,8 @@ public class ListFragment extends Fragment {
             return;
         }
 
-        adapter = new VocabListAdapter(getActivity(), words);
-        adapter.setVisibilityOfCheckBox(false);
+        initAdapter();
+
         ListView listView = (ListView)getView().findViewById(R.id.vocab_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,6 +142,56 @@ public class ListFragment extends Fragment {
         });
     }
 
+
+
+
+    private void initAdapter() {
+        adapter = new VocabListAdapter(getActivity(), words);
+        adapter.setVisibilityOfCheckBox(false);
+
+        String strType = SharedPreferenceHelper.getsInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
+
+        if(StringUtil.stringEmptyOrNull(strType))
+            strType = AppConstant.SORT_LIST_ARRAY[0];
+
+        sortList(strType);
+    }
+
+
+    private SortType getSortType(String type) {
+
+        if(type.equals(AppConstant.SORT_LIST_ARRAY[1]))
+            return SortType.byDate;
+
+       return SortType.alphabetically;
+    }
+
+
+    private void sortList(final String strType) {
+
+        if(adapter == null) return;
+
+        final SortType type = getSortType(strType);
+
+        final Collator col = Collator.getInstance();
+
+        adapter.sort(new Comparator<Word>() {
+            @Override
+            public int compare(Word lhs, Word rhs) {
+
+                if (type == SortType.byDate){
+                    if(lhs.getCreateAt().before(rhs.getCreateAt()))
+                        return -1;
+                    else if( lhs.getCreateAt().after(rhs.getCreateAt()) )
+                        return 1;
+                    else
+                        return 0;
+                }
+
+                return col.compare(lhs.getWord(),rhs.getWord());
+            }
+        });
+    }
 
     public void onDeleteActionButtonPressed() {
 
