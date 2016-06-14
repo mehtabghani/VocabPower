@@ -51,16 +51,16 @@
                 android:layout_marginTop="30dp">
 
 
-                <Button
-                    android:id="@+id/button_add_meaning_field"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/img_button_add"
-                    />
+                <!--<Button-->
+                    <!--android:id="@+id/button_add_meaning_field"-->
+                    <!--style="?android:attr/buttonStyleSmall"-->
+                    <!--android:layout_width="20dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:background="@drawable/img_button_add"-->
+                    <!--/>-->
 
                 <TextView
                     android:id="@+id/textView_meaning"
@@ -76,7 +76,7 @@
                     android:id="@+id/linearLayoutMeaning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/button_add_meaning_field"
+                    android:layout_below="@+id/textView_meaning"
                     android:orientation="vertical"
                     android:layout_marginTop="10dp">
 
@@ -104,16 +104,16 @@
                 android:layout_below="@+id/relativeLayoutMeaning"
                 android:layout_marginTop="30dp">
 
-                <Button
-                    android:id="@+id/button_add_example_field"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/img_button_add"
-                    />
+                <!--<Button-->
+                    <!--android:id="@+id/button_add_example_field"-->
+                    <!--style="?android:attr/buttonStyleSmall"-->
+                    <!--android:layout_width="20dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:background="@drawable/img_button_add"-->
+                    <!--/>-->
 
                 <TextView
                     android:id="@+id/textView_example"
@@ -129,7 +129,7 @@
                     android:id="@+id/linearLayoutExample"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/button_add_example_field"
+                    android:layout_below="@+id/textView_example"
                     android:orientation="vertical"
                     android:layout_marginTop="10dp">
 

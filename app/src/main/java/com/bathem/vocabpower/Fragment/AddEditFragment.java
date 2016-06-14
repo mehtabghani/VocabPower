@@ -65,8 +65,8 @@ public class AddEditFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(mode == AddEditMode.add_mode) {
-            initAddMeaningFieldButton();
-            initAddExampleFieldButton();
+           // initAddMeaningFieldButton();
+           // initAddExampleFieldButton();
         } else {
             hideAddButtons();
             prepareFieldsForEditMode();

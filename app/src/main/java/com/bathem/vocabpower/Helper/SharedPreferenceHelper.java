@@ -25,7 +25,7 @@ public class SharedPreferenceHelper {
 
         String result = "";
         Context context = AppManager.getsInstance().getApplicationContext();
-        SharedPreferences sharedPref =context.getSharedPreferences(DEFAULT_SHARED_PREFERNECE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DEFAULT_SHARED_PREFERNECE, Context.MODE_PRIVATE);
 
         if (sharedPref.contains(key))
             result = sharedPref.getString(key, "");
@@ -37,7 +37,7 @@ public class SharedPreferenceHelper {
     public void setSharedPreferenceByKey(String key, String value) {
 
         Context context = AppManager.getsInstance().getApplicationContext();
-        SharedPreferences sharedPref =context.getSharedPreferences(DEFAULT_SHARED_PREFERNECE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(DEFAULT_SHARED_PREFERNECE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
