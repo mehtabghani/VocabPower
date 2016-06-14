@@ -182,16 +182,20 @@ public class ListFragment extends Fragment {
 
                 if (type == SortType.byDate){
                     if(lhs.getCreateAt().before(rhs.getCreateAt()))
-                        return -1;
-                    else if( lhs.getCreateAt().after(rhs.getCreateAt()) )
                         return 1;
+                    else if( lhs.getCreateAt().after(rhs.getCreateAt()) )
+                        return -1;
                     else
                         return 0;
+
                 }
 
                 return col.compare(lhs.getWord(),rhs.getWord());
             }
         });
+
+
+
     }
 
     public void onDeleteActionButtonPressed() {
