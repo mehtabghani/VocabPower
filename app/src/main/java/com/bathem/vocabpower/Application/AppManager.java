@@ -20,8 +20,4 @@ public class AppManager extends Application {
     }
 
 
-    public Context getApplicationContext() {
-
-        return getApplicationContext();
-    }
 }
