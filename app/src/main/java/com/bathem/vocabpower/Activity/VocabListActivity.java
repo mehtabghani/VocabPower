@@ -1,9 +1,15 @@
 package com.bathem.vocabpower.Activity;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +21,7 @@ import com.bathem.vocabpower.Fragment.DetailFragment;
 import com.bathem.vocabpower.Fragment.ListFragment;
 import com.bathem.vocabpower.R;
 
-public class VocabListActivity extends BaseActivity {
+public class VocabListActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
     public static final String TAG_FRAMENT_LIST = "list_fragment";
     public static final String TAG_FRAMENT_DETAIL = "detail_fragment";
@@ -30,6 +36,24 @@ public class VocabListActivity extends BaseActivity {
         setContentView(R.layout.activity_vocab_list);
         showListFragment();
         initAddVocabButton();
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        Log.d("activity", "handleIntent");
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+            Log.d("activity", query);
+
+        }
     }
 
     @Override
@@ -37,6 +61,14 @@ public class VocabListActivity extends BaseActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        MenuItem searchItem = menu.findItem(R.id.action_search_vocab);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, VocabListActivity.class)));
 
         return super.onCreateOptionsMenu( menu );
     }
@@ -146,4 +178,17 @@ public class VocabListActivity extends BaseActivity {
         }
     }
 
+    // Search action methods
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+       // Log.d("activity", query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        return false;
+    }
 }

@@ -193,9 +193,6 @@ public class ListFragment extends Fragment {
                 return col.compare(lhs.getWord(),rhs.getWord());
             }
         });
-
-
-
     }
 
     public void onDeleteActionButtonPressed() {

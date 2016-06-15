@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">VocabPower</string>
-    <string name="title_activity_vocab_list">VocabListActivity</string>
+    <string name="title_activity_vocab_list">Vocabs</string>
     <string name="title_word">Word:</string>
     <string name="title_meaning">Meaning:</string>
     <string name="title_example">Example:</string>
@@ -8,5 +8,7 @@
     <string name="action_button_delete">Delete</string>
     <string name="action_button_edit">Edit</string>
     <string name="action_button_favourite">Favourite</string>
+    <string name="hint_search">Search</string>
+
 
 </resources>

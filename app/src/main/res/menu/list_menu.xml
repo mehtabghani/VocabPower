@@ -5,6 +5,12 @@
     <group
         android:id="@+id/menu_group_edit_delete">
 
+        <item android:id="@+id/action_search_vocab"
+            android:title="@string/hint_search"
+            android:icon="@android:drawable/ic_menu_search"
+            app:showAsAction="collapseActionView|ifRoom"
+            app:actionViewClass="android.support.v7.widget.SearchView" />
+
         <item android:id="@+id/action_delete"
             android:title="@string/action_button_delete"
             android:icon="@drawable/icon_delete_white_24dp"
