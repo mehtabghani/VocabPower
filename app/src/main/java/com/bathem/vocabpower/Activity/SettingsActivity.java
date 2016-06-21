@@ -2,18 +2,18 @@ package com.bathem.vocabpower.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Interface.IFileStatusListener;
 import com.bathem.vocabpower.Manager.GoogleDriveManager;
 import com.bathem.vocabpower.R;
 
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     GoogleDriveManager mDriveManager;
 
