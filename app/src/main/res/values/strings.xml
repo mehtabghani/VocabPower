@@ -8,7 +8,7 @@
     <string name="action_button_delete">Delete</string>
     <string name="action_button_edit">Edit</string>
     <string name="action_button_favourite">Favourite</string>
-    <string name="hint_search">Search</string>
+    <string name="hint_search">Search Vocab</string>
 
 
 </resources>
