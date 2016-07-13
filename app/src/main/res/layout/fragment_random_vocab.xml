@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_word"
-            android:id="@+id/textView_detail_word"
+            android:id="@+id/textView_random_detail_word"
             android:textAlignment="center"
             android:textSize="40dp" />
 
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:textSize="18dp"
         android:text="@string/title_meaning"
-        android:id="@+id/textView_detail_meaning" />
+        android:id="@+id/textView_random_detail_meaning" />
     </LinearLayout>
 
     </RelativeLayout>
@@ -56,12 +56,12 @@
         android:gravity="right">
 
     <Button
-        android:id="@+id/button_toogle_word_meaning"
+        android:id="@+id/button_show_detail"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:visibility="gone"
-        android:background="@drawable/img_button_add" />
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="Detail"
+         />
 
     <Button
         android:id="@+id/button_random_vocab"

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -42,7 +43,13 @@ public class DetailFragment extends Fragment {
     // either dynamically or via XML layout inflation.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, parent, false);
+        View view = inflater.inflate(R.layout.fragment_detail, parent, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        return view;
     }
 
     @Override
@@ -132,8 +139,15 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_delete).setVisible(false);
-        menu.findItem(R.id.action_search_vocab).setVisible(false);
+        MenuItem item = menu.findItem(R.id.action_delete);
+        if( item != null)
+            item.setVisible(false);
+
+        item = menu.findItem(R.id.action_search_vocab);
+
+        if( item != null)
+            item.setVisible(false);
+
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -147,7 +161,5 @@ public class DetailFragment extends Fragment {
 
     public void onFavouriteActionButtonPressed() {
         Log.d("debug", "onFavouriteActionButtonPressed");
-
-
     }
 }

@@ -135,6 +135,7 @@ public class VocabListActivity extends BaseActivity implements SearchView.OnQuer
         ft.commit();
         isDetailFragmentVisible = true;
         showAddVocabButton(View.INVISIBLE);
+
     }
 
     void initAddVocabButton() {

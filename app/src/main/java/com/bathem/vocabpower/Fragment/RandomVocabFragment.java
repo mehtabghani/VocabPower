@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bathem.vocabpower.Activity.MainActivity;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.Model.DataModel;
@@ -49,7 +50,7 @@ public class RandomVocabFragment extends Fragment {
         super.onStart();
 
         initRandomVocabButton();
-        initWordMeaningToggleButton();
+        initShowDetailButton();
         addClickListenerOnRandomContainer();
 
         if(mVocab != null) {
@@ -83,14 +84,14 @@ public class RandomVocabFragment extends Fragment {
         });
     }
 
-    private void initWordMeaningToggleButton() {
+    private void initShowDetailButton() {
 
-        Button btn = (Button) getActivity().findViewById(R.id.button_toogle_word_meaning);
+        Button btn = (Button) getActivity().findViewById(R.id.button_show_detail);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleWordMeaningView();
+                showDetailFragment(mVocab.getWord().getId());
             }
         });
     }
@@ -109,7 +110,7 @@ public class RandomVocabFragment extends Fragment {
     private void updateWordField (String word) {
         Log.d("VOCAB", "Word:" + word);
 
-        TextView tvWord = (TextView) getActivity().findViewById(R.id.textView_detail_word);
+        TextView tvWord = (TextView) getActivity().findViewById(R.id.textView_random_detail_word);
         tvWord.setText(StringUtil.capitalizeFirstLetter(word));
     }
 
@@ -128,7 +129,7 @@ public class RandomVocabFragment extends Fragment {
 
             index++;
         }
-        TextView tvMeaning = (TextView) getActivity().findViewById(R.id.textView_detail_meaning);
+        TextView tvMeaning = (TextView) getActivity().findViewById(R.id.textView_random_detail_meaning);
         tvMeaning.setText(stringBuilder.toString());
     }
 
@@ -163,4 +164,10 @@ public class RandomVocabFragment extends Fragment {
         layout.setVisibility(View.VISIBLE);
         wordLayoutVisible = true;
     }
+
+    private void showDetailFragment(int wordID) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.showDetailFragment(wordID);
+    }
+
 }
