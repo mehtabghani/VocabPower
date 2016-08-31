@@ -112,7 +112,8 @@ public class VocabListActivity extends BaseActivity implements SearchView.OnQuer
 
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        listFragment = new ListFragment();
+        if(listFragment == null)
+            listFragment = new ListFragment();
         // Replace the contents of the container with the new fragment
         ft.replace(R.id.main_placeholder, listFragment, TAG_FRAMENT_LIST);
         // or ft.add(R.id.your_placeholder, new FooFragment());
