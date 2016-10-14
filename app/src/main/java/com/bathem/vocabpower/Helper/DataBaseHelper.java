@@ -477,6 +477,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Context ctx = context;
         try {
             File file = ctx.getDatabasePath(DATABASE_NAME);
+            Log.d("DB", "restoreDB: path" + file.getAbsolutePath());
             if (file.exists())
                 file.delete();
             FileOutputStream mOutput = new FileOutputStream(file);
