@@ -17,7 +17,6 @@ import com.bathem.vocabpower.R;
 public class SettingsActivity extends BaseActivity {
 
     GoogleDriveManager mDriveManager;
-    ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +25,17 @@ public class SettingsActivity extends BaseActivity {
         mDriveManager = GoogleDriveManager.getInstance();
         initBackupButton();
         initRestoreButton();
+        addProgressBarLoader(R.id.layout_activity_setting);
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(spinner == null) {
-            spinner = (ProgressBar) findViewById(R.id.progressBar);
-            spinner.setVisibility(View.GONE);
+        if(mSpinner == null) {
+            mSpinner = (ProgressBar) findViewById(R.id.progressBar);
+            mSpinner.setVisibility(View.GONE);
         }
     }
 
@@ -57,7 +58,7 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
                 mDriveManager.connect();
-                spinner.setVisibility(View.VISIBLE);
+                mSpinner.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -69,7 +70,7 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
                 mDriveManager.connect();
-                spinner.setVisibility(View.VISIBLE);
+                mSpinner.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -77,14 +78,14 @@ public class SettingsActivity extends BaseActivity {
     IFileStatusListener fileListener = new IFileStatusListener() {
         @Override
         public void onFileRestored() {
-            spinner.setVisibility(View.GONE);
+            mSpinner.setVisibility(View.GONE);
             Toast toast = Toast.makeText(getApplicationContext(), "Database has been restored.", Toast.LENGTH_SHORT);
             toast.show();
         }
 
         @Override
         public void onFileUploaded() {
-            spinner.setVisibility(View.GONE);
+            mSpinner.setVisibility(View.GONE);
             Toast toast = Toast.makeText(getApplicationContext(), "Database has been backed up.", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -98,7 +99,7 @@ public class SettingsActivity extends BaseActivity {
             else
                 msg = "Failed to restore database";
 
-            spinner.setVisibility(View.GONE);
+            mSpinner.setVisibility(View.GONE);
 
             Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
             toast.show();
@@ -108,7 +109,5 @@ public class SettingsActivity extends BaseActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         mDriveManager.onActivityResult(requestCode,resultCode,data);
     }
-
-
 
 }
