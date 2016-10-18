@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -35,6 +38,28 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu( Menu menu ) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu( menu );
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_setting:
+                showSettingsActivity();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         refreshMainView();
@@ -44,7 +69,7 @@ public class MainActivity extends BaseActivity {
         refreshMainView();
         initListButton();
         initAddButton();
-        initSettingsButton();
+       // initSettingsButton();
     }
 
     void refreshMainView() {
@@ -107,15 +132,19 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void initSettingsButton() {
-        Button btnSetting = (Button) findViewById(R.id.button_settings);
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
+//    private void initSettingsButton() {
+//        Button btnSetting = (Button) findViewById(R.id.button_settings);
+//        btnSetting.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//    }
+
+    void showSettingsActivity() {
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     void loadJSONFile () {
