@@ -1,7 +1,9 @@
 package com.bathem.vocabpower.Activity.Base;
 
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
     }
 
     protected void addProgressBarLoader(int viewId) {
@@ -37,6 +38,14 @@ public class BaseActivity extends AppCompatActivity {
         spinnerView.setLayoutParams(layoutParams);
     }
 
+    protected void showConfirmationDialogue(String title, String msg, DialogInterface.OnClickListener positiveButton, DialogInterface negativeButton) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(msg)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, (DialogInterface.OnClickListener) positiveButton)
+                .setNegativeButton(android.R.string.no, (DialogInterface.OnClickListener) negativeButton).show();
+    }
 
     @Override
     protected void onResume() {

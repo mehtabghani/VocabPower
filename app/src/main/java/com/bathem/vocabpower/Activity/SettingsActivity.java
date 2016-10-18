@@ -1,5 +1,6 @@
 package com.bathem.vocabpower.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,11 +57,20 @@ public class SettingsActivity extends BaseActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
-                mDriveManager.connect();
-                mSpinner.setVisibility(View.VISIBLE);
+                showConfirmationDialogue("Backup Database", "This action will overwright existing database on drive.", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        initBackup();
+                    }
+                }, null);
             }
         });
+    }
+
+    void initBackup() {
+        mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
+        mDriveManager.connect();
+        mSpinner.setVisibility(View.VISIBLE);
     }
 
     void initRestoreButton() {
@@ -68,11 +78,22 @@ public class SettingsActivity extends BaseActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
-                mDriveManager.connect();
-                mSpinner.setVisibility(View.VISIBLE);
+
+                showConfirmationDialogue("Restore Database", "This action will overwright existing database.", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        initRestore();
+                    }
+                }, null);
+
             }
         });
+    }
+
+    void initRestore() {
+        mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
+        mDriveManager.connect();
+        mSpinner.setVisibility(View.VISIBLE);
     }
 
     IFileStatusListener fileListener = new IFileStatusListener() {
