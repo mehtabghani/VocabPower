@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.bathem.vocabpower.Constant.AppConstant;
 import com.bathem.vocabpower.Entity.Category;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
@@ -29,11 +30,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final int ERROR_IN_QUERY = -1;
 
+    // Database Version
+    private static final int DATABASE_VERSION = 2;
+
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
-
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
 
     // Database Name
     public static final String DATABASE_NAME = "VocabMaster";
@@ -61,66 +62,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COL_FK_CATEGORY_ID = "category_id";
 
 
-    // Table Create Statements
-
-    // Type table create statement
-    private static final String CREATE_TABLE_TYPE = "CREATE TABLE "
-            + TABLE_TYPE + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_TYPE + " TEXT"
-            + ")";
-
-    // Word table create statement
-    private static final String CREATE_TABLE_WORD = "CREATE TABLE "
-            + TABLE_WORD + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_WORD + " TEXT,"
-            + COL_CREATED_AT + " DATETIME,"
-            + COL_FK_TYPE_ID + " INTEGER,"
-            + "FOREIGN KEY (" + COL_FK_TYPE_ID + ") REFERENCES " + TABLE_TYPE + "(" + COL_ID + ")"
-            + ")";
-
-    // Meaning table create statement
-    private static final String CREATE_TABLE_MEANING = "CREATE TABLE "
-            + TABLE_MEANING + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_MEANING + " TEXT,"
-            + COL_FK_WORD_ID + " INTEGER,"
-            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + ")"
-            + ")";
-
-    // Example table create statement
-    private static final String CREATE_TABLE_EXAMPLE = "CREATE TABLE "
-            + TABLE_EXAMPLE + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_EXAMPLE + " TEXT,"
-            + COL_FK_WORD_ID + " INTEGER,"
-            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + ")"
-            + ")";
-
-    // Group table create statement
-    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE "
-            + TABLE_CATEGORY + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_CATEGORY_NAME + " TEXT"
-            + ")";
-
-
-    // GROUP_WORD table create statement
-    private static final String CREATE_TABLE_WORD_CATEGORY = "CREATE TABLE "
-            + TABLE_WORD_CATEGORY + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_FK_WORD_ID + " INTEGER NOT NULL,"
-            + COL_FK_CATEGORY_ID + " INTEGER NOT NULL,"
-            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + "), "
-            + "FOREIGN KEY (" + COL_FK_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COL_ID + ")"
-            + ")";
-
-    /* SELECT QUERY */
-
-    private static final String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
-
-
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        Log.d(LOG, "onCreate starts");
+
         db.execSQL(CREATE_TABLE_TYPE);
         db.execSQL(CREATE_TABLE_WORD);
         db.execSQL(CREATE_TABLE_MEANING);
@@ -131,7 +81,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(LOG, "Upgradtion starts");
 
+        addTypes(db);
     }
 
 /*
@@ -141,7 +93,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_CATEGORY_NAME, category.getCatgoryName());
+        values.put(COL_TYPE, category.getCatgoryName());
 
         // insert row
         long id = db.insert(TABLE_CATEGORY, null, values);
@@ -149,6 +101,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return id;
     }
+
+    private void addTypes(SQLiteDatabase db) {
+
+        db.beginTransaction();
+
+        for (String type : AppConstant.WORD_TYPES) {
+            ContentValues values = new ContentValues();
+            values.put(COL_TYPE, type);
+            long id = db.insert(TABLE_TYPE, null, values);
+
+            if(id > 0)
+                Log.d(LOG, type +  ": added to  types table");
+            else
+                Log.d(LOG, type +  ": failed to  add type");
+
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        //db.close();
+    }
+
 
     // Add Methods
 
@@ -494,5 +467,61 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             fileStatusListener.onFileFailed(DriveMode.restore);
         }
     }
+
+
+
+
+    // Table Create Statements
+
+    // Type table create statement
+    private static final String CREATE_TABLE_TYPE = "CREATE TABLE "
+            + TABLE_TYPE + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_TYPE + " TEXT"
+            + ")";
+
+    // Word table create statement
+    private static final String CREATE_TABLE_WORD = "CREATE TABLE "
+            + TABLE_WORD + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_WORD + " TEXT,"
+            + COL_CREATED_AT + " DATETIME,"
+            + COL_FK_TYPE_ID + " INTEGER,"
+            + "FOREIGN KEY (" + COL_FK_TYPE_ID + ") REFERENCES " + TABLE_TYPE + "(" + COL_ID + ")"
+            + ")";
+
+    // Meaning table create statement
+    private static final String CREATE_TABLE_MEANING = "CREATE TABLE "
+            + TABLE_MEANING + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_MEANING + " TEXT,"
+            + COL_FK_WORD_ID + " INTEGER,"
+            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + ")"
+            + ")";
+
+    // Example table create statement
+    private static final String CREATE_TABLE_EXAMPLE = "CREATE TABLE "
+            + TABLE_EXAMPLE + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_EXAMPLE + " TEXT,"
+            + COL_FK_WORD_ID + " INTEGER,"
+            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + ")"
+            + ")";
+
+    // Group table create statement
+    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE "
+            + TABLE_CATEGORY + " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_CATEGORY_NAME + " TEXT"
+            + ")";
+
+
+    // GROUP_WORD table create statement
+    private static final String CREATE_TABLE_WORD_CATEGORY = "CREATE TABLE "
+            + TABLE_WORD_CATEGORY + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COL_FK_WORD_ID + " INTEGER NOT NULL,"
+            + COL_FK_CATEGORY_ID + " INTEGER NOT NULL,"
+            + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + "), "
+            + "FOREIGN KEY (" + COL_FK_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COL_ID + ")"
+            + ")";
+
+    /* SELECT QUERY */
+
+    private static final String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
 
 }

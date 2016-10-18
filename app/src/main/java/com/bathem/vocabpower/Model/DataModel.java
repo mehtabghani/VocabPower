@@ -46,7 +46,6 @@ public class DataModel {
     public static List<Word> getWordList(Context context) {
         DataBaseHelper db = new DataBaseHelper(context);
 
-
         List<Word> words = db.getWordList();
 
         if(sWords == null) {

@@ -18,6 +18,7 @@ import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Fragment.DetailFragment;
 import com.bathem.vocabpower.Fragment.RandomVocabFragment;
+import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.JSONHelper;
 import com.bathem.vocabpower.Model.DataModel;
 import com.bathem.vocabpower.R;
@@ -66,10 +67,10 @@ public class MainActivity extends BaseActivity {
     }
 
     void init() {
+        DataBaseHelper db = new DataBaseHelper(this);
         refreshMainView();
         initListButton();
         initAddButton();
-       // initSettingsButton();
     }
 
     void refreshMainView() {
@@ -131,16 +132,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
-//    private void initSettingsButton() {
-//        Button btnSetting = (Button) findViewById(R.id.button_settings);
-//        btnSetting.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//    }
 
     void showSettingsActivity() {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);

@@ -7,6 +7,7 @@ public class AppConstant {
 
     public static final String[] SORT_LIST_ARRAY = new String[] { "Alphabet order" ,"Recent" };
 
+    public static final String[] WORD_TYPES = {"none", "verb", "adverb", "adjective", "phrasel verb"};
 
     //KEYS
     public static final String KEY_SORT_LIST_TYPE = "sort_list_type";
