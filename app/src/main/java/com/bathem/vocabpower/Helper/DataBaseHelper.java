@@ -128,7 +128,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public long addVocab(Vocab vocab) {
 
         long id;
-        id = addWord(vocab.getWord().getWord());
+        id = addWord(vocab.getWord());
 
         if(id != ERROR_IN_QUERY) {
 
@@ -139,15 +139,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    private long addWord(String word) {
+    private long addWord(Word word) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_WORD, word);
+        values.put(COL_WORD, word.getWord());
         Date date= new Date();
         String sDate = Utils.getStringDate(date);
         values.put(COL_CREATED_AT, sDate);
+        values.put(COL_FK_TYPE_ID, word.getTypeID());
 
         // insert row
         long id = db.insert(TABLE_WORD, null, values);
@@ -190,7 +191,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         long result;
         int id = vocab.getWord().getId();
-        result = editWordbyId(vocab.getWord().getWord(), vocab.getWord().getId());
+
+
+        result = editWordbyId(vocab.getWord(), vocab.getWord().getId());
 
         if(result != ERROR_IN_QUERY) {
 
@@ -201,12 +204,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    private long editWordbyId(String word, int _id) {
+    private long editWordbyId(Word word, int _id) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_WORD, word);
+        values.put(COL_WORD, word.getWord());
+        values.put(COL_FK_TYPE_ID, word.getTypeID());
 
         long id = db.update(TABLE_WORD, values, COL_ID + "= ?", new String[]{String.valueOf(_id)});
         db.close();
@@ -363,6 +367,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
         String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
         word.setCreateAt(Utils.getDateFromString(date));
+        word.setTypeID(c.getInt(c.getColumnIndex(COL_FK_TYPE_ID)));
         db.close();
 
         return word;
@@ -446,6 +451,49 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return word;
     }
 
+
+    public int getTypeIdByWord(String type) {
+
+        String SELECT_TYPE = "SELECT * FROM " + TABLE_TYPE + " WHERE "+ COL_TYPE + " = " + "\""+ type + "\"";
+        Log.e(LOG, SELECT_TYPE);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.rawQuery(SELECT_TYPE, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        int id = c.getInt(c.getColumnIndex(COL_ID));
+
+        if(id > -1)
+            return id;
+
+        return 0;
+    }
+
+
+    public String getTypeByID(int id) {
+
+        String SELECT_TYPE = "SELECT * FROM " + TABLE_TYPE + " WHERE "+ COL_ID + " = " + id ;
+        Log.e(LOG, SELECT_TYPE);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.rawQuery(SELECT_TYPE, null);
+
+        if (c != null) {
+            c.moveToFirst();
+
+            if (c.getCount() > 0) {
+                return c.getString(c.getColumnIndex(COL_TYPE));
+            }
+        }
+
+        return "";
+
+    }
+
     public  void restoreDB(InputStream is, Context context, IFileStatusListener fileStatusListener) {
         Context ctx = context;
         try {
@@ -467,6 +515,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             fileStatusListener.onFileFailed(DriveMode.restore);
         }
     }
+
 
 
 

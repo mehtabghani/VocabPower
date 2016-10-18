@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bathem.vocabpower.Activity.AddVocabActivity;
+import com.bathem.vocabpower.Constant.AppConstant;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Enum.AddEditMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
@@ -83,6 +84,7 @@ public class DetailFragment extends Fragment {
 
     private void updateFields() {
         updateWordField(mVocab.getWord().getWord());
+        updateWordTypeField(mVocab.getWord().getTypeID() );
         updateMeaningField(mVocab.getMeaning());
         updateExampleField(mVocab.getExample());
     }
@@ -92,6 +94,18 @@ public class DetailFragment extends Fragment {
 
         TextView tvWord = (TextView) getActivity().findViewById(R.id.textView_detail_word);
         tvWord.setText(StringUtil.capitalizeFirstLetter(word));
+    }
+
+    private void updateWordTypeField (int id) {
+        String wordType = DataModel.getWordTypeByID(id, getActivity());
+
+        Log.d("VOCAB", "Word-Type:" + wordType);
+
+        if(StringUtil.stringEmptyOrNull(wordType))
+            wordType = AppConstant.WORD_TYPES[0];
+
+        TextView tvWord = (TextView) getActivity().findViewById(R.id.textView_detail_word_Type);
+        tvWord.setText(StringUtil.capitalizeFirstLetter(wordType));
     }
 
     private void updateMeaningField (List<String> meanings) {

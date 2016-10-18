@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bathem.vocabpower.Constant.AppConstant;
 import com.bathem.vocabpower.Entity.Vocab;
 import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Enum.AddEditMode;
@@ -31,6 +34,7 @@ import java.util.List;
 public class AddEditFragment extends Fragment {
 
     private String word;
+    private String wordType;
     private List<String> meanings;
     private List<String> examples;
     private static int meaningButtonCount;
@@ -64,9 +68,12 @@ public class AddEditFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        initTypesSpinner();
+
         if(mode == AddEditMode.add_mode) {
            // initAddMeaningFieldButton();
            // initAddExampleFieldButton();
+
         } else {
            // hideAddButtons();
             prepareFieldsForEditMode();
@@ -127,6 +134,10 @@ public class AddEditFragment extends Fragment {
             Vocab vocab = new Vocab();
             Word _word = new Word();
             _word.setWord(word);
+
+            int typeID = DataModel.getWordIDByType(wordType, getActivity());
+            _word.setTypeID(typeID);
+
             vocab.setVocab(_word, meanings, examples);
             long id = addVocabInDB(vocab);
             updateDataModel(id);
@@ -173,6 +184,7 @@ public class AddEditFragment extends Fragment {
 
     void prepareVocabs() {
         word = ((EditText) getActivity().findViewById(R.id.editText_word)).getText().toString();
+        wordType = ((Spinner) getActivity().findViewById(R.id.spinner_word_type)).getSelectedItem().toString();
 
         meanings = new ArrayList<String>();
         examples = new ArrayList<String>();
@@ -236,6 +248,16 @@ public class AddEditFragment extends Fragment {
         EditText editText = (EditText) getActivity().findViewById(R.id.editText_word);
         editText.setText(mCurrentVocab.getWord().getWord());
 
+        //set type spinner value
+
+        int typeId = mCurrentVocab.getWord().getTypeID();
+        wordType =   DataModel.getWordTypeByID(typeId, getActivity());
+
+        if(StringUtil.stringEmptyOrNull(wordType))
+            setSpinnerValue(AppConstant.WORD_TYPES[0]);
+        else
+            setSpinnerValue(wordType);
+
         editText = (EditText) getActivity().findViewById(R.id.editText_meaning);
         editText.setText(mCurrentVocab.getMeaning().get(0));
 
@@ -243,6 +265,11 @@ public class AddEditFragment extends Fragment {
             editText = (EditText) getActivity().findViewById(R.id.editText_example);
             editText.setText(mCurrentVocab.getExample().get(0));
         }
+    }
+
+    private void setSpinnerValue (String wordType) {
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_word_type);
+        spinner.setSelection(((ArrayAdapter<String>)spinner.getAdapter()).getPosition(wordType));
     }
 
     public void editVocab() {
@@ -254,6 +281,10 @@ public class AddEditFragment extends Fragment {
             Word _word = new Word();
             _word.setId(DataModel.getCurrentVocab().getWord().getId());
             _word.setWord(word);
+
+            int typeID = DataModel.getWordIDByType(wordType, getActivity());
+            _word.setTypeID(typeID);
+
             vocab.setVocab(_word, meanings, examples);
             long id = editVocabInDB(vocab);
             refreshDataModel();
@@ -284,6 +315,23 @@ public class AddEditFragment extends Fragment {
     private void refreshDataModel()
     {
         DataModel.refreshWordList(getActivity());
+    }
+
+
+
+    void initTypesSpinner() {
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinner_word_type);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+
+        List<String> list = new ArrayList<String>();
+        for (String type: AppConstant.WORD_TYPES) {
+            list.add(type);
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        setSpinnerValue(AppConstant.WORD_TYPES[0]);
     }
 
 }

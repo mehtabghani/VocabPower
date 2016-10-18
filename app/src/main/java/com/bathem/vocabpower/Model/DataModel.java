@@ -104,4 +104,17 @@ public class DataModel {
     public static void refreshWordList (Context context) {
         DataModel.getWordList(context);
     }
+
+
+    public static String getWordTypeByID(int id, Context context) {
+
+        DataBaseHelper db = new DataBaseHelper(context);
+        return db.getTypeByID(id);
+    }
+
+    public static int getWordIDByType(String type, Context context) {
+
+        DataBaseHelper db = new DataBaseHelper(context);
+        return db.getTypeIdByWord(type);
+    }
 }
