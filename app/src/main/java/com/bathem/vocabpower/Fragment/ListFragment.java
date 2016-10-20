@@ -143,9 +143,6 @@ public class ListFragment extends Fragment {
         });
     }
 
-
-
-
     private void initAdapter() {
         adapter = new VocabListAdapter(getActivity(), words);
         adapter.setVisibilityOfCheckBox(false);

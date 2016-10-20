@@ -3,6 +3,7 @@ package com.bathem.vocabpower.Activity.Base;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.bathem.vocabpower.Fragment.DetailFragment;
 import com.bathem.vocabpower.R;
 
 /**
@@ -19,7 +21,13 @@ import com.bathem.vocabpower.R;
 
 public class BaseActivity extends AppCompatActivity {
 
+    public static final String TAG_FRAMENT_DETAIL = "detail_fragment";
+
     protected ProgressBar mSpinner;
+    protected DetailFragment detailFragment;
+    protected boolean isDetailFragmentVisible;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,4 +60,21 @@ public class BaseActivity extends AppCompatActivity {
         super.onResume();
 
     }
+
+
+    public void showDetailFragment(int id, int view) {
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        detailFragment = DetailFragment.newInstance(id);
+
+        // Replace the contents of the container with the new fragment
+        ft.replace(view, detailFragment, TAG_FRAMENT_DETAIL);
+
+        // Complete the changes added above
+        ft.commit();
+
+
+    }
+
 }

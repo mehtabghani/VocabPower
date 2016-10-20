@@ -58,6 +58,11 @@ public class DataModel {
         return sWords;
     }
 
+    public static int getWordsCount() {
+
+        return sWords.size();
+    }
+
     public static Vocab getRandomVocab(Context context) {
 
         if(sWords == null || sWords.size() <= 0) {

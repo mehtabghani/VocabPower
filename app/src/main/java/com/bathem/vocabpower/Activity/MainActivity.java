@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity {
         DataBaseHelper db = new DataBaseHelper(this);
         refreshMainView();
         initListButton();
+        initFavouriteButton();
         initAddButton();
     }
 
@@ -110,13 +111,31 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if(DataModel.getWordList(MainActivity.this).size() == 0) {
+                if(DataModel.getWordsCount() < 1) {
                     Toast toast = Toast.makeText(getApplicationContext(), "Please add vocab first.", Toast.LENGTH_SHORT);
                     toast.show();
                     return;
                 }
 
                 Intent intent = new Intent(MainActivity.this, VocabListActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initFavouriteButton() {
+        Button btnList = (Button) findViewById(R.id.button_favourite);
+        btnList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(DataModel.getWordsCount() < 1) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please add vocab first.", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+
+                Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
                 startActivity(intent);
             }
         });

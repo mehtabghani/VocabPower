@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bathem.vocabpower.Activity.Base.BaseActivity;
-import com.bathem.vocabpower.Fragment.DetailFragment;
 import com.bathem.vocabpower.Fragment.ListFragment;
 import com.bathem.vocabpower.Helper.StringUtil;
 import com.bathem.vocabpower.R;
@@ -25,10 +24,7 @@ import com.bathem.vocabpower.R;
 public class VocabListActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
     public static final String TAG_FRAMENT_LIST = "list_fragment";
-    public static final String TAG_FRAMENT_DETAIL = "detail_fragment";
-    boolean isDetailFragmentVisible;
     ListFragment listFragment;
-    DetailFragment detailFragment;
     MenuItem mSearchItem;
 
 
@@ -106,8 +102,7 @@ public class VocabListActivity extends BaseActivity implements SearchView.OnQuer
 
         }
     }
-
-
+    
     void showListFragment() {
 
         // Begin the transaction
@@ -124,19 +119,9 @@ public class VocabListActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     public void showDetailFragment(int id) {
-        // Begin the transaction
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        detailFragment = DetailFragment.newInstance(id);
-
-        // Replace the contents of the container with the new fragment
-        ft.replace(R.id.main_placeholder, detailFragment, TAG_FRAMENT_DETAIL);
-
-        // Complete the changes added above
-        ft.commit();
+        super.showDetailFragment(id, R.id.main_placeholder);
         isDetailFragmentVisible = true;
         showAddVocabButton(View.INVISIBLE);
-
     }
 
     void initAddVocabButton() {
