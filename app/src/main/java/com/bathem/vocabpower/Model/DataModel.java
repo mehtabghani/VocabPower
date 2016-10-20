@@ -46,7 +46,7 @@ public class DataModel {
     public static List<Word> getWordList(Context context) {
         DataBaseHelper db = new DataBaseHelper(context);
 
-        List<Word> words = db.getWordList();
+        List<Word> words = db.getWordList(null);
 
         if(sWords == null) {
             sWords = new ArrayList<Word>();
@@ -116,5 +116,12 @@ public class DataModel {
 
         DataBaseHelper db = new DataBaseHelper(context);
         return db.getTypeIdByWord(type);
+    }
+
+
+    public static List<Word> getFavouriteWordsList(Context context) {
+
+        DataBaseHelper db = new DataBaseHelper(context);
+        return db.getFavouriteWordLists();
     }
 }

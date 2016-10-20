@@ -252,14 +252,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(COL_EXAMPLE, meaning);
             values.put(COL_FK_WORD_ID, wordID);
-            db.update(TABLE_EXAMPLE, values, COL_FK_WORD_ID  + "= ? ", new String[]{String.valueOf(wordID) } );
+            db.update(TABLE_EXAMPLE, values, COL_FK_WORD_ID + "= ? ", new String[]{String.valueOf(wordID)});
         }
         db.close();
     }
 
+
     //Get Methods
 
-    public List<Word> getWordList() {
+
+    public List<Word> getFavouriteWordLists() {
+
+        int isFavourite = 1;
+        String SELECT_ALL_FAVOURTIE_VOCAB =  " WHERE " + COL_IS_FAVOURITE + "=" + isFavourite;
+        return getWordList(SELECT_ALL_FAVOURTIE_VOCAB);
+    }
+
+
+    public List<Word> getWordList(String query) {
 
         if(!DB_AVAIALBLE)
             return new ArrayList<Word>();
@@ -267,7 +277,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         List<Word> words= new ArrayList<Word>();
 
-        String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD;
+        if(StringUtil.stringEmptyOrNull(query))
+            query = "";
+
+        String SELECT_ALL_VOCAB = "SELECT * FROM " + TABLE_WORD + query;
         Log.e(LOG, SELECT_ALL_VOCAB);
 
         SQLiteDatabase db = this.getReadableDatabase();
