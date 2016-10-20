@@ -11,6 +11,7 @@ public class Word {
     private String word;
     private Date createAt;
     private int typeID;
+    private boolean isFavourite;
 
     public int getId() {
         return id;
@@ -52,5 +53,13 @@ public class Word {
             return true;
 
         return super.equals(o);
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
     }
 }

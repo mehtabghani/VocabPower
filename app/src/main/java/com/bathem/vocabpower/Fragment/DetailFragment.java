@@ -87,6 +87,8 @@ public class DetailFragment extends Fragment {
         updateWordTypeField(mVocab.getWord().getTypeID() );
         updateMeaningField(mVocab.getMeaning());
         updateExampleField(mVocab.getExample());
+
+        Log.d("VOCAB", "IS_FAVOURITE: " + mVocab.getWord().isFavourite());
     }
 
     private void updateWordField (String word) {

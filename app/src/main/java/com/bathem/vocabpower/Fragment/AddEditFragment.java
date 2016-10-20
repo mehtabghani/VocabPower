@@ -284,9 +284,9 @@ public class AddEditFragment extends Fragment {
 
             int typeID = DataModel.getWordIDByType(wordType, getActivity());
             _word.setTypeID(typeID);
-
+            _word.setFavourite(true);
             vocab.setVocab(_word, meanings, examples);
-            long id = editVocabInDB(vocab);
+            editVocabInDB(vocab);
             refreshDataModel();
         } catch (ValidationException e) {
             e.printStackTrace();

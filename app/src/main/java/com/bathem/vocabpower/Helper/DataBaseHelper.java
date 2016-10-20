@@ -31,7 +31,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int ERROR_IN_QUERY = -1;
 
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
@@ -52,6 +52,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COL_WORD = "word";
     private static final String COL_CREATED_AT = "created_at";
     private static final String COL_FK_TYPE_ID = "type_id";
+    private static final String COL_IS_FAVOURITE = "is_favourite";
+
 
     private static final String COL_MEANING = "meaning";
     private static final String COL_EXAMPLE = "example";
@@ -62,8 +64,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COL_FK_CATEGORY_ID = "category_id";
 
 
+
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
     }
 
     @Override
@@ -77,18 +81,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_EXAMPLE);
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_WORD_CATEGORY);
+        addTypes(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(LOG, "Upgradtion starts");
 
-        addTypes(db);
+        runUpgradeQueries(db);
     }
 
-/*
- * Creating a Group
- */
+    private void runUpgradeQueries(SQLiteDatabase db) {
+        db.beginTransaction();
+
+        // addTypes(db); //version 2
+        db.execSQL(ALTER_TABLE_WORD_ADD_COL_IS_FAVOURITE); //version 3
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    /*
+    * Creating a Group
+    */
     public long createCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -104,8 +119,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private void addTypes(SQLiteDatabase db) {
 
-        db.beginTransaction();
-
         for (String type : AppConstant.WORD_TYPES) {
             ContentValues values = new ContentValues();
             values.put(COL_TYPE, type);
@@ -117,8 +130,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 Log.d(LOG, type +  ": failed to  add type");
 
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
+
         //db.close();
     }
 
@@ -149,6 +161,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String sDate = Utils.getStringDate(date);
         values.put(COL_CREATED_AT, sDate);
         values.put(COL_FK_TYPE_ID, word.getTypeID());
+        values.put(COL_IS_FAVOURITE, word.isFavourite() ? 1 : 0);
 
         // insert row
         long id = db.insert(TABLE_WORD, null, values);
@@ -211,6 +224,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_WORD, word.getWord());
         values.put(COL_FK_TYPE_ID, word.getTypeID());
+        values.put(COL_IS_FAVOURITE, word.isFavourite() ? 1 : 0);
 
         long id = db.update(TABLE_WORD, values, COL_ID + "= ?", new String[]{String.valueOf(_id)});
         db.close();
@@ -266,6 +280,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
               word.setWord(c.getString(c.getColumnIndex(COL_WORD)));
               String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
               word.setCreateAt(Utils.getDateFromString(date));
+              word.setFavourite( (c.getInt(c.getColumnIndex(COL_IS_FAVOURITE)) == 1) );
               words.add(word);
           } while (c.moveToNext());
         }
@@ -368,6 +383,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String date = c.getString(c.getColumnIndex(COL_CREATED_AT));
         word.setCreateAt(Utils.getDateFromString(date));
         word.setTypeID(c.getInt(c.getColumnIndex(COL_FK_TYPE_ID)));
+        word.setFavourite( (c.getInt(c.getColumnIndex(COL_IS_FAVOURITE)) == 1) );
         db.close();
 
         return word;
@@ -519,7 +535,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-
     // Table Create Statements
 
     // Type table create statement
@@ -532,6 +547,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_WORD = "CREATE TABLE "
             + TABLE_WORD + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_WORD + " TEXT,"
+            + COL_IS_FAVOURITE + " INTEGER DEFAULT 0"
             + COL_CREATED_AT + " DATETIME,"
             + COL_FK_TYPE_ID + " INTEGER,"
             + "FOREIGN KEY (" + COL_FK_TYPE_ID + ") REFERENCES " + TABLE_TYPE + "(" + COL_ID + ")"
@@ -568,6 +584,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY (" + COL_FK_WORD_ID + ") REFERENCES " + TABLE_WORD + "(" + COL_ID + "), "
             + "FOREIGN KEY (" + COL_FK_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COL_ID + ")"
             + ")";
+
+
+    // ALTER QUERIES
+
+    private static final String ALTER_TABLE_WORD_ADD_COL_IS_FAVOURITE
+            = "ALTER TABLE " + TABLE_WORD + " ADD COLUMN " + COL_IS_FAVOURITE + " INTEGER DEFAULT 0" ;
 
     /* SELECT QUERY */
 
