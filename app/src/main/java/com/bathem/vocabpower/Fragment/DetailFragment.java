@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bathem.vocabpower.Activity.AddVocabActivity;
 import com.bathem.vocabpower.Constant.AppConstant;
 import com.bathem.vocabpower.Entity.Vocab;
+import com.bathem.vocabpower.Entity.Word;
 import com.bathem.vocabpower.Enum.AddEditMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Helper.StringUtil;
@@ -30,6 +31,8 @@ public class DetailFragment extends Fragment {
     public static final String VOCAB_ID = "id";
     int mID;
     Vocab mVocab;
+    Word mWord;
+    MenuItem mFavouriteMenu;
 
     public static DetailFragment newInstance(int id) {
 
@@ -80,6 +83,8 @@ public class DetailFragment extends Fragment {
         DataBaseHelper db = new DataBaseHelper(getContext());
         mVocab = db.getVocabByID(mID);
         DataModel.setCurrentVocab(mVocab);
+        mWord = mVocab.getWord();
+
     }
 
     private void updateFields() {
@@ -164,9 +169,13 @@ public class DetailFragment extends Fragment {
         if( item != null)
             item.setVisible(false);
 
+        mFavouriteMenu = menu.findItem(R.id.action_favourite);
+
+        if(mFavouriteMenu != null && mWord.isFavourite())
+            mFavouriteMenu.setIcon(getResources().getDrawable(R.drawable.icon_favorite_border_white_24dp));
+
         super.onPrepareOptionsMenu(menu);
     }
-
 
     public void onEditActionButtonPressed() {
         Log.d("debug", "onEditActionButtonPressed");
@@ -177,5 +186,15 @@ public class DetailFragment extends Fragment {
 
     public void onFavouriteActionButtonPressed() {
         Log.d("debug", "onFavouriteActionButtonPressed");
+
+        if(mWord.isFavourite()) {
+            mFavouriteMenu.setIcon(getResources().getDrawable(R.drawable.icon_favorite_white_24dp));
+            mWord.setFavourite(false);
+        } else {
+            mFavouriteMenu.setIcon(getResources().getDrawable(R.drawable.icon_favorite_border_white_24dp));
+            mWord.setFavourite(true);
+        }
+
+        DataModel.updateWord(mWord, getActivity());
     }
 }

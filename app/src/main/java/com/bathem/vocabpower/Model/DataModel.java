@@ -129,4 +129,12 @@ public class DataModel {
         DataBaseHelper db = new DataBaseHelper(context);
         return db.getFavouriteWordLists();
     }
+
+
+    public static void updateWord(Word word, Context context) {
+
+        DataBaseHelper db = new DataBaseHelper(context);
+        db.editWordbyId(word, word.getId());
+
+    }
 }

@@ -102,7 +102,7 @@ public class VocabListActivity extends BaseActivity implements SearchView.OnQuer
 
         }
     }
-    
+
     void showListFragment() {
 
         // Begin the transaction

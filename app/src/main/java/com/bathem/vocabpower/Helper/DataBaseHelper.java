@@ -217,7 +217,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    private long editWordbyId(Word word, int _id) {
+    public long editWordbyId(Word word, int _id) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
