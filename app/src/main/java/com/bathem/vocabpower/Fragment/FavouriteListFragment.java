@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bathem.vocabpower.Activity.FavouriteActivity;
 import com.bathem.vocabpower.Adapter.FavouriteListAdapter;
@@ -25,7 +26,7 @@ import java.util.Comparator;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavouriteListFragment extends Fragment {
+public class FavouriteListFragment extends Fragment  {
 
     FavouriteListAdapter adapter;
     ArrayList<Word> words;
@@ -57,17 +58,20 @@ public class FavouriteListFragment extends Fragment {
         words = (ArrayList<Word>) DataModel.getFavouriteWordsList(getActivity());
        // String type = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
        // sortList(type);
-        adapter.notifyDataSetChanged();
+        if(words != null && words.size() > 0)
+            adapter.notifyDataSetChanged();
     }
 
     void prepareListView() {
 
         words = (ArrayList<Word>) DataModel.getFavouriteWordsList(getActivity());
 
-        if(words ==  null) {
+        if(words ==  null || words.size() <= 0) {
             Log.d("debug", "No words found");
+            showNoDataAvailable(true);
             return;
         }
+        showNoDataAvailable(false);
 
         initAdapter();
 
@@ -89,7 +93,7 @@ public class FavouriteListFragment extends Fragment {
     }
 
     private void initAdapter() {
-        adapter = new FavouriteListAdapter(getActivity(), words);
+        adapter = new FavouriteListAdapter(getActivity(), words, this);
        // adapter.setVisibilityOfCheckBox(false);
 
        // String strType = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
@@ -135,4 +139,22 @@ public class FavouriteListFragment extends Fragment {
         });
     }
 
+    public void onDeleteItem(Word word) {
+        word.setFavourite(false);
+        DataModel.updateWord(word, getContext());
+
+        if(words ==  null || words.size() <= 0) {
+            showNoDataAvailable(true);
+        }
+    }
+
+
+    void showNoDataAvailable(boolean show) {
+       TextView tv = (TextView) getActivity().findViewById(R.id.textView_no_word_available);
+        if(show)
+            tv.setVisibility(View.VISIBLE);
+        else
+            tv.setVisibility(View.GONE);
+
+    }
 }

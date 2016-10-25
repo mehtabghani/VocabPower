@@ -30,6 +30,6 @@
         android:textSize="25dp"
         android:gravity="center"
         android:layout_centerInParent="true"
-        android:text="No word available."/>
+        android:text="@string/txt_no_word_available"/>
 
 </RelativeLayout>

@@ -12,5 +12,8 @@
     <string name="action_button_favourite">Favourite</string>
     <string name="hint_search">Search Vocab</string>
 
+    <string name="txt_no_word_available">No Word Available.</string>
+
+
 
 </resources>
