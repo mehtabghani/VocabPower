@@ -31,7 +31,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int ERROR_IN_QUERY = -1;
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
@@ -95,7 +95,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
 
         // addTypes(db); //version 2
-        db.execSQL(ALTER_TABLE_WORD_ADD_COL_IS_FAVOURITE); //version 3
+       //db.execSQL(ALTER_TABLE_WORD_ADD_COL_IS_FAVOURITE); //version 3
+        addType(db, AppConstant.WORD_TYPES[1]); //version 4
 
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -120,21 +121,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private void addTypes(SQLiteDatabase db) {
 
         for (String type : AppConstant.WORD_TYPES) {
-            ContentValues values = new ContentValues();
-            values.put(COL_TYPE, type);
-            long id = db.insert(TABLE_TYPE, null, values);
-
-            if(id > 0)
-                Log.d(LOG, type +  ": added to  types table");
-            else
-                Log.d(LOG, type +  ": failed to  add type");
+           addType(db, type);
 
         }
-
-        //db.close();
     }
 
+    private void addType(SQLiteDatabase db, String type) {
+        ContentValues values = new ContentValues();
+        values.put(COL_TYPE, type);
+        long id = db.insert(TABLE_TYPE, null, values);
 
+        if(id > 0)
+            Log.d(LOG, type +  ": added to  types table");
+        else
+            Log.d(LOG, type +  ": failed to  add type");
+
+    }
+    
     // Add Methods
 
     public long addVocab(Vocab vocab) {
