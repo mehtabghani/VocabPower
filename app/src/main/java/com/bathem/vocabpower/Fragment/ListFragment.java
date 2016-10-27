@@ -83,6 +83,10 @@ public class ListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         words = (ArrayList<Word>) DataModel.getCurrentWordList();
+
+        if(words != null && words.size() > 0)
+            getActivity().setTitle(getString(R.string.title_activity_vocab_list) + " (" + words.size() + ")");
+
         showNoWordAvailableIfNeeded();
         String type = SharedPreferenceHelper.getInstance().getSharedPreferenceByKey(AppConstant.KEY_SORT_LIST_TYPE);
         sortList(type);
