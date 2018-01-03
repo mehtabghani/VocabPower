@@ -137,7 +137,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(LOG, type +  ": failed to  add type");
 
     }
-    
+
     // Add Methods
 
     public long addVocab(Vocab vocab) {
@@ -563,7 +563,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_WORD = "CREATE TABLE "
             + TABLE_WORD + "(" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_WORD + " TEXT,"
-            + COL_IS_FAVOURITE + " INTEGER DEFAULT 0"
+            + COL_IS_FAVOURITE + " INTEGER DEFAULT 0,"
             + COL_CREATED_AT + " DATETIME,"
             + COL_FK_TYPE_ID + " INTEGER,"
             + "FOREIGN KEY (" + COL_FK_TYPE_ID + ") REFERENCES " + TABLE_TYPE + "(" + COL_ID + ")"
