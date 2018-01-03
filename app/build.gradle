@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.bathem.vocabpower"
-        minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 1
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 16083101
         versionName "1.0"
     }
     buildTypes {
@@ -22,9 +22,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'com.google.code.gson:gson:2.5'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:design:26.0.2'
+    compile 'com.android.support:support-v4:26.0.2'
     compile 'com.google.android.gms:play-services-drive:9.0.1'
 }
