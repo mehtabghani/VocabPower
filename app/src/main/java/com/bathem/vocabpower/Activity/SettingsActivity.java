@@ -12,18 +12,21 @@ import com.bathem.vocabpower.Activity.Base.BaseActivity;
 import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Interface.IFileStatusListener;
 import com.bathem.vocabpower.Manager.GoogleDriveManager;
+import com.bathem.vocabpower.Manager.GoogleDriveManager2;
 import com.bathem.vocabpower.R;
 
 
 public class SettingsActivity extends BaseActivity {
 
     GoogleDriveManager mDriveManager;
+    GoogleDriveManager2 mDriveManager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         mDriveManager = GoogleDriveManager.getInstance();
+        mDriveManager2 = GoogleDriveManager2.getInstance();
         initBackupButton();
         initRestoreButton();
         addProgressBarLoader(R.id.layout_activity_setting);
@@ -91,8 +94,10 @@ public class SettingsActivity extends BaseActivity {
     }
 
     void initRestore() {
-        mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
-        mDriveManager.connect();
+//        mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener );
+//        mDriveManager.connect();
+
+        mDriveManager2.initGoogleClient(SettingsActivity.this, DriveMode.restore, fileListener);
         mSpinner.setVisibility(View.VISIBLE);
     }
 
