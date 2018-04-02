@@ -133,7 +133,9 @@ public class SettingsActivity extends BaseActivity {
     };
 
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        mDriveManager.onActivityResult(requestCode,resultCode,data);
+       super.onActivityResult(requestCode, resultCode, data);
+        //mDriveManager.onActivityResult(requestCode,resultCode,data);
+        mDriveManager2.onActivityResult(requestCode, resultCode, data);
     }
 
 }
