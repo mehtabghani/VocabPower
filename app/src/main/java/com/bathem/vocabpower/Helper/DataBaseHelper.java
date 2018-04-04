@@ -31,13 +31,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int ERROR_IN_QUERY = -1;
 
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 1;
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
 
     // Database Name
-    public static final String DATABASE_NAME = "VocabMaster";
+    public static final String DATABASE_NAME = "vocab_master";
 
     // Table Names
     private static final String TABLE_WORD = "word";
@@ -88,7 +88,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(LOG, "Upgradtion starts");
 
-        runUpgradeQueries(db);
+        //runUpgradeQueries(db);
     }
 
     private void runUpgradeQueries(SQLiteDatabase db) {

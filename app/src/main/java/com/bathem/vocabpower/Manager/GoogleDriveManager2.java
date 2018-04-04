@@ -1,15 +1,17 @@
 package com.bathem.vocabpower.Manager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
 import com.bathem.vocabpower.Interface.IFileStatusListener;
-import com.bathem.vocabpower.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,6 +35,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,21 +61,27 @@ public class GoogleDriveManager2 {
     private static final String TAG = "GoogleDrive";
     private static final int REQUEST_CODE_RESOLUTION = 3;
     private static final String DATABASE_NAME = DataBaseHelper.DATABASE_NAME;
-    private static final String GOOGLE_DRIVE_FILE_NAME = "vocab_master.db";
+    private static final String GOOGLE_DRIVE_FILE_NAME = DATABASE_NAME;
     private static final String GOOGLE_DRIVE_FOLDER_NAME = "Vocab Master";
 
     private static GoogleDriveManager2 mManager;
     private GoogleSignInClient mGoogleSignInClient;
     private Activity mActivity;
+    private DataBaseHelper mDBHelper;
+    private Context mAppContext;
 
+
+
+    //Google Drive instances
     private DriveClient mDriveClient;
     private DriveResourceClient mDriveResourceClient;
+    private DriveFile mDriveFile;
+
 
     /**
      * Tracks completion of the drive picker
      */
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
-
 
     IFileStatusListener mFileStatusListener;
 
@@ -87,7 +97,11 @@ public class GoogleDriveManager2 {
     public void initGoogleClient(Activity activity, DriveMode mode, IFileStatusListener iFileStatusListener) {
         mActivity = activity;
         mFileStatusListener = iFileStatusListener;
-        signIn();
+        mAppContext =    mActivity.getApplication();
+        mDBHelper = new DataBaseHelper(mActivity);
+        //signIn();
+
+         Log.d(TAG, ""+mAppContext.getDatabasePath(DATABASE_NAME));
     }
 
     /**
@@ -96,7 +110,7 @@ public class GoogleDriveManager2 {
     protected void signIn() {
         Set<Scope> requiredScopes = new HashSet<>(2);
         requiredScopes.add(Drive.SCOPE_FILE);
-        requiredScopes.add(Drive.SCOPE_APPFOLDER);
+        //requiredScopes.add(Drive.SCOPE_APPFOLDER);
         GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(mActivity);
         if (signInAccount != null && signInAccount.getGrantedScopes().containsAll(requiredScopes)) {
             initializeDriveClient(signInAccount);
@@ -107,7 +121,7 @@ public class GoogleDriveManager2 {
             GoogleSignInOptions signInOptions =
                     new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                             .requestScopes(Drive.SCOPE_FILE)
-                            .requestScopes(Drive.SCOPE_APPFOLDER)
+                            //.requestScopes(Drive.SCOPE_APPFOLDER)
                             .build();
             mGoogleSignInClient = GoogleSignIn.getClient(mActivity, signInOptions);
             mActivity.startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
@@ -172,9 +186,12 @@ public class GoogleDriveManager2 {
                             @Override
                             public void onSuccess(MetadataBuffer metadataBuffer) {
                                 // Handle results...
-                                Log.d(TAG, GOOGLE_DRIVE_FILE_NAME + "found");
-                                //mFileStatusListener.onFileRestored();
-                                pickTextFile();
+                                Log.d(TAG, GOOGLE_DRIVE_FILE_NAME + " found");
+
+                                if(metadataBuffer.getCount()>0) {
+                                    mDriveFile = metadataBuffer.get(0).getDriveId().asDriveFile();
+                                    openFile(mDriveFile);
+                                }
 
                             }
                         })
@@ -184,7 +201,7 @@ public class GoogleDriveManager2 {
                         // Handle failure...
                         // ...
 
-                        Log.d(TAG, "Error retrieving files", e);
+                        Log.e(TAG, "Error retrieving files", e);
                         mFileStatusListener.onFileFailed(DriveMode.restore);
 
                     }
@@ -193,6 +210,37 @@ public class GoogleDriveManager2 {
     }
 
 
+
+    private void openFile(DriveFile file) {
+        Task<DriveContents> openFileTask =
+                mDriveResourceClient.openFile(file, DriveFile.MODE_READ_ONLY);
+
+        openFileTask
+                .continueWithTask(new Continuation<DriveContents, Task<Void>>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
+
+
+                        DriveContents contents = task.getResult();
+
+                        Log.d(TAG, "File opened successfully and ready to restore");
+
+                        InputStream inputStream = contents.getInputStream();
+                        mDBHelper.restoreDB(inputStream, mAppContext, mFileStatusListener);
+
+                        Task<Void> discardTask = mDriveResourceClient.discardContents(contents);
+                        return discardTask;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Failed to open file.", e);
+
+                    }
+                });
+    }
 
 
     /**
@@ -246,5 +294,10 @@ public class GoogleDriveManager2 {
     }
 
 
+    private File getDbPath() {
+        File file = mActivity.getDatabasePath(DATABASE_NAME);
+        Log.d(TAG, "DB path: " + file.getAbsolutePath());
+        return file;
+    }
 
 }
