@@ -125,20 +125,20 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
     void createBackUpFile() {
         Log.d(TAG, "createBackUpFile");
-        // checkIfFileExist(GOOGLE_DRIVE_FILE_NAME);
-        checkIfFileExist(GOOGLE_DRIVE_FOLDER_NAME, new IDriveListener() {
-            @Override
-            public void onFileExist(DriveId id) {
-
-                //deleteFile(id);
-                deleteFolder(id);
-            }
-
-            @Override
-            public void onFileDoesNotExist() {
-                createDBFile();
-            }
-        });
+//        // checkIfFileExist(GOOGLE_DRIVE_FILE_NAME);
+//        checkIfFileExist(GOOGLE_DRIVE_FOLDER_NAME, new IDriveListener() {
+//            @Override
+//            public void onFileExist(DriveId id) {
+//
+//                //deleteFile(id);
+//                deleteFolder(id);
+//            }
+//
+//            @Override
+//            public void onFileDoesNotExist() {
+//                createDBFile();
+//            }
+//        });
     }
 
     void checkIfFileExist(final String fileName,final IDriveListener driveListener) {
@@ -383,19 +383,19 @@ public class GoogleDriveManager implements GoogleApiClient.ConnectionCallbacks,
 
     public void downloadFile(String fileName) {
 
-        checkIfFileExist(fileName, new IDriveListener() {
-            @Override
-            public void onFileExist(DriveId id) {
-//                DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, id);
-//                driveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY, null).setResultCallback(readContentResult);
-            }
-
-            @Override
-            public void onFileDoesNotExist() {
-                Log.d(TAG, "File does not exist");
-
-            }
-        });
+//        checkIfFileExist(fileName, new IDriveListener() {
+//            @Override
+//            public void onFileExist(DriveId id) {
+////                DriveFile driveFile = Drive.DriveApi.getFile(mGoogleApiClient, id);
+////                driveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY, null).setResultCallback(readContentResult);
+//            }
+//
+//            @Override
+//            public void onFileDoesNotExist() {
+//                Log.d(TAG, "File does not exist");
+//
+//            }
+//        });
 
     }
 

@@ -71,9 +71,10 @@ public class SettingsActivity extends BaseActivity {
     }
 
     void initBackup() {
-        mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
-        mDriveManager.connect();
+       // mDriveManager.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
+       // mDriveManager.connect();
         mSpinner.setVisibility(View.VISIBLE);
+        mDriveManager2.initGoogleClient(SettingsActivity.this, DriveMode.backup, fileListener);
     }
 
     void initRestoreButton() {

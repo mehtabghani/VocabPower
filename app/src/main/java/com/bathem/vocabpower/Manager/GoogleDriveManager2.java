@@ -3,7 +3,6 @@ package com.bathem.vocabpower.Manager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -11,6 +10,7 @@ import android.util.Log;
 
 import com.bathem.vocabpower.Enum.DriveMode;
 import com.bathem.vocabpower.Helper.DataBaseHelper;
+import com.bathem.vocabpower.Interface.IDriveListener;
 import com.bathem.vocabpower.Interface.IFileStatusListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,6 +25,7 @@ import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.MetadataBuffer;
+import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityOptions;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
@@ -34,8 +35,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,7 +66,7 @@ public class GoogleDriveManager2 {
     private static final String TAG = "GoogleDrive";
     private static final int REQUEST_CODE_RESOLUTION = 3;
     private static final String DATABASE_NAME = DataBaseHelper.DATABASE_NAME;
-    private static final String GOOGLE_DRIVE_FILE_NAME = DATABASE_NAME;
+    private static final String GOOGLE_DRIVE_FILE_NAME = DATABASE_NAME+"_1.0.db";
     private static final String GOOGLE_DRIVE_FOLDER_NAME = "Vocab Master";
 
     private static GoogleDriveManager2 mManager;
@@ -69,6 +74,7 @@ public class GoogleDriveManager2 {
     private Activity mActivity;
     private DataBaseHelper mDBHelper;
     private Context mAppContext;
+    private DriveMode mDriveMode;
 
 
 
@@ -99,9 +105,10 @@ public class GoogleDriveManager2 {
         mFileStatusListener = iFileStatusListener;
         mAppContext =    mActivity.getApplication();
         mDBHelper = new DataBaseHelper(mActivity);
-        //signIn();
+        mDriveMode = mode;
+        signIn();
 
-         Log.d(TAG, ""+mAppContext.getDatabasePath(DATABASE_NAME));
+        // Log.d(TAG, ""+mAppContext.getDatabasePath(DATABASE_NAME));
     }
 
     /**
@@ -171,11 +178,131 @@ public class GoogleDriveManager2 {
     private void initializeDriveClient(GoogleSignInAccount signInAccount) {
         mDriveClient = Drive.getDriveClient(mActivity, signInAccount);
         mDriveResourceClient = Drive.getDriveResourceClient(mActivity, signInAccount);
-        searchFile();
+
+
+        if(mDriveMode == DriveMode.backup){
+            startBackUp();
+        } else if(mDriveMode == DriveMode.restore) {
+            searchFile(new IDriveListener() {
+                @Override
+                public void onFileExist(DriveFile driveFile) {
+                    openFile(driveFile);
+                }
+                @Override
+                public void onFileDoesNotExist() {
+
+                }
+            });
+        }
     }
 
 
-    private void searchFile() {
+//Backup methods
+    private void startBackUp()  {
+
+        searchFile(new IDriveListener() {
+            @Override
+            public void onFileExist(DriveFile driveFile) {
+                deleteFile(driveFile);
+            }
+
+            @Override
+            public void onFileDoesNotExist() {
+                //upload db
+                createFileOnGDrive();
+            }
+        });
+
+    }
+
+    private void deleteFile(DriveFile file) {
+
+        mDriveResourceClient
+                .delete(file)
+                .addOnSuccessListener(mActivity,
+                        new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, GOOGLE_DRIVE_FILE_NAME + "has been removed from GDrive");
+
+                                //upload db
+                                createFileOnGDrive();
+                            }
+                        })
+                .addOnFailureListener(mActivity, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to delete file", e);
+
+                    }
+                });
+    }
+
+    private void createFileOnGDrive() {
+
+        final File file = getDbPath();
+
+        if(!file.exists()) {
+            Log.v(TAG, "DB file does not exist.");
+            return;
+        }
+
+        final String mimeType = "application/x-sqlite3";//MimeTypeMap.getSingleton().getMimeTypeFromExtension(".db");
+
+
+        final Task<DriveFolder> rootFolderTask = mDriveResourceClient.getRootFolder();
+        final Task<DriveContents> createContentsTask = mDriveResourceClient.createContents();
+        Tasks.whenAll(rootFolderTask, createContentsTask)
+                .continueWithTask(new Continuation<Void, Task<DriveFile>>() {
+                    @Override
+                    public Task<DriveFile> then(@NonNull Task<Void> task) throws Exception {
+                        DriveFolder parent = rootFolderTask.getResult();
+                        DriveContents contents = createContentsTask.getResult();
+
+                        FileInputStream is = new FileInputStream(file);
+                        BufferedInputStream in = new BufferedInputStream(is);
+                        byte[] buffer = new byte[8 * 1024];
+                        BufferedOutputStream out = new BufferedOutputStream(contents.getOutputStream());
+                        int n = 0;
+                        while( ( n = in.read(buffer) ) > 0 ) {
+                            out.write(buffer, 0, n);
+                        }
+
+                        in.close();
+
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                .setTitle(GOOGLE_DRIVE_FILE_NAME)
+                                .setMimeType(mimeType)
+                                .setStarred(true)
+                                .build();
+
+                        return mDriveResourceClient.createFile(parent, changeSet, contents);
+                    }
+                })
+                .addOnSuccessListener(mActivity,
+                        new OnSuccessListener<DriveFile>() {
+                            @Override
+                            public void onSuccess(DriveFile driveFile) {
+                                Log.d(TAG, GOOGLE_DRIVE_FILE_NAME+" uploaded on GDrive");
+                                mFileStatusListener.onFileUploaded();
+                            }
+                        })
+                .addOnFailureListener(mActivity, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        mFileStatusListener.onFileFailed(DriveMode.backup);
+
+                    }
+                });
+
+    }
+
+
+// Restore Methods
+
+
+    private void searchFile(final IDriveListener iDriveListener) {
         Query query = new Query.Builder()
                 .addFilter(Filters.eq(SearchableField.TITLE, GOOGLE_DRIVE_FILE_NAME))
                 .build();
@@ -190,7 +317,9 @@ public class GoogleDriveManager2 {
 
                                 if(metadataBuffer.getCount()>0) {
                                     mDriveFile = metadataBuffer.get(0).getDriveId().asDriveFile();
-                                    openFile(mDriveFile);
+                                    iDriveListener.onFileExist(mDriveFile);
+                                } else {
+                                    iDriveListener.onFileDoesNotExist();
                                 }
 
                             }
@@ -198,9 +327,6 @@ public class GoogleDriveManager2 {
                 .addOnFailureListener(mActivity, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Handle failure...
-                        // ...
-
                         Log.e(TAG, "Error retrieving files", e);
                         mFileStatusListener.onFileFailed(DriveMode.restore);
 
@@ -208,7 +334,6 @@ public class GoogleDriveManager2 {
                 });
 
     }
-
 
 
     private void openFile(DriveFile file) {
@@ -221,13 +346,11 @@ public class GoogleDriveManager2 {
                     @Override
                     public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
 
-
                         DriveContents contents = task.getResult();
 
                         Log.d(TAG, "File opened successfully and ready to restore");
+                        restoreDB(contents);
 
-                        InputStream inputStream = contents.getInputStream();
-                        mDBHelper.restoreDB(inputStream, mAppContext, mFileStatusListener);
 
                         Task<Void> discardTask = mDriveResourceClient.discardContents(contents);
                         return discardTask;
@@ -243,56 +366,10 @@ public class GoogleDriveManager2 {
     }
 
 
-    /**
-     * Prompts the user to select a folder using OpenFileActivity.
-     *
-     * @return Task that resolves with the selected item's ID.
-     */
-    protected Task<DriveId> pickFolder() {
-        OpenFileActivityOptions openOptions =
-                new OpenFileActivityOptions.Builder()
-                        .setSelectionFilter(
-                                Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
-                        .build();
-        return pickItem(openOptions);
-    }
-
-
-    /**
-     * Prompts the user to select a text file using OpenFileActivity.
-     *
-     * @return Task that resolves with the selected item's ID.
-     */
-    protected Task<DriveId> pickTextFile() {
-        OpenFileActivityOptions openOptions =
-                new OpenFileActivityOptions.Builder()
-                        .setSelectionFilter(Filters.eq(SearchableField.TITLE, GOOGLE_DRIVE_FILE_NAME))
-                        //.setActivityTitle(mActivity.getString(R.string.select_file))
-                        .build();
-        return pickItem(openOptions);
-    }
-
-    /**
-     * Prompts the user to select a folder using OpenFileActivity.
-     *
-     * @param openOptions Filter that should be applied to the selection
-     * @return Task that resolves with the selected item's ID.
-     */
-    private Task<DriveId> pickItem(OpenFileActivityOptions openOptions) {
-        mDriveClient
-                .newOpenFileActivityIntentSender(openOptions)
-                .continueWith(new Continuation<IntentSender, Object>() {
-                    @Override
-                    public Object then(@NonNull Task<IntentSender> task) throws Exception {
-                        mActivity.startIntentSenderForResult(
-                                task.getResult(), REQUEST_CODE_OPEN_ITEM, null, 0, 0, 0);
-                        return null;
-                    }
-                });
-
-        return mOpenItemTaskSource.getTask();
-    }
-
+   void restoreDB(DriveContents contents) {
+       InputStream inputStream = contents.getInputStream();
+       mDBHelper.restoreDB(inputStream, mAppContext, mFileStatusListener);
+   }
 
     private File getDbPath() {
         File file = mActivity.getDatabasePath(DATABASE_NAME);
@@ -301,3 +378,4 @@ public class GoogleDriveManager2 {
     }
 
 }
+
